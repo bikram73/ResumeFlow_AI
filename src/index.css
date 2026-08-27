@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #faf8ff;
+    color: #191b23;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+.font-display-lg {
+  font-family: 'Poppins', sans-serif;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.material-symbols-outlined-filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.glass-panel, .glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.mesh-gradient {
+  background-color: #faf8ff;
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(220,100%,90%,1) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, hsla(262,100%,90%,1) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, hsla(187,100%,90%,1) 0, transparent 50%);
+  animation: mesh 10s ease infinite alternate;
+}
+
+@keyframes mesh {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f3f3fe 25%, #e1e2ed 50%, #f3f3fe 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.98); }
+}
+
+.ai-pulse {
+  animation: pulse-soft 2s infinite ease-in-out;
+}
+
+.loader-ring {
+  border: 4px solid #f3f3fe;
+  border-top: 4px solid #004ac6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.ai-glow {
+  transition: all 0.2s ease-in-out;
+}
+
+.ai-glow:hover {
+  box-shadow: 0 0 20px rgba(113, 42, 226, 0.18);
+  transform: translateY(-2px);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c3c6d7;
+  border-radius: 10px;
+}
+
+.drawer-transition {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+

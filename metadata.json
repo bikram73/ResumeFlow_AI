@@ -1,0 +1,6 @@
+{
+  "name": "ResumeFlow AI",
+  "description": "Precision Intelligence for Talent Acquisition",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
