@@ -28,6 +28,9 @@ export interface Candidate {
   avatar: string;
   topMatch?: boolean;
   aiVerified?: boolean;
+  ocrProcessed?: boolean;
+  ocrMethod?: string;
+  extractedText?: string;
   aiSummary?: string;
   hiringConfidence?: 'High' | 'Medium' | 'Low';
   overallMatchNumber?: number;

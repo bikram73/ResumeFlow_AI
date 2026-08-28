@@ -3,6 +3,7 @@ import { ActiveTab, Candidate, JobDescription } from '../types';
 import { Sidebar } from './Sidebar';
 import { Footer } from './Footer';
 import { sampleResumesBatch } from '../data';
+import { parseJobDescription } from '../services/api';
 
 interface DashboardViewProps {
   candidates: Candidate[];
@@ -37,6 +38,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [jdInputText, setJdInputText] = useState(jobDescription.rawText || '');
   const [stagedFiles, setStagedFiles] = useState<StagedFileItem[]>([]);
   const [statusMessage, setStatusMessage] = useState('');
+  const [isParsingJd, setIsParsingJd] = useState(false);
 
   const jdFileInputRef = useRef<HTMLInputElement>(null);
   const resumeFileInputRef = useRef<HTMLInputElement>(null);
@@ -48,23 +50,61 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     : 0;
   const topCandidate = candidates.length > 0 ? candidates[0] : null;
 
-  const handleJdFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleJdFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const text = reader.result as string;
-      setJdInputText(text);
-      setJobDescription({
-        ...jobDescription,
-        title: file.name.replace(/\.[^/.]+$/, ''),
-        rawText: text,
-      });
-      setStatusMessage(`✓ Job Description loaded from ${file.name}`);
-      setTimeout(() => setStatusMessage(''), 4000);
-    };
-    reader.readAsText(file);
+    setIsParsingJd(true);
+    setStatusMessage(`⚡ Processing ${file.name} with AI OCR & Document Parser...`);
+
+    try {
+      if (file.name.endsWith('.txt') || file.name.endsWith('.md')) {
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const text = reader.result as string;
+          setJdInputText(text);
+          const parsed = await parseJobDescription(text);
+          if (parsed && parsed.jd) {
+            setJobDescription({
+              ...jobDescription,
+              ...parsed.jd,
+              rawText: text,
+            });
+          }
+          setIsParsingJd(false);
+          setStatusMessage(`✓ Job Description extracted & parsed from ${file.name}`);
+          setTimeout(() => setStatusMessage(''), 5000);
+        };
+        reader.readAsText(file);
+      } else {
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const res = reader.result as string;
+          const base64 = res.split(',')[1] || res;
+          const parsed = await parseJobDescription(undefined, {
+            name: file.name,
+            mimeType: file.type || 'application/pdf',
+            base64,
+          });
+          if (parsed && parsed.jd) {
+            setJobDescription({
+              ...jobDescription,
+              ...parsed.jd,
+              rawText: parsed.rawText || '',
+            });
+            setJdInputText(parsed.rawText || '');
+          }
+          setIsParsingJd(false);
+          setStatusMessage(`✓ Document OCR extracted & parsed from ${file.name} (${parsed.extractionMethod || 'Gemini OCR'})`);
+          setTimeout(() => setStatusMessage(''), 5000);
+        };
+        reader.readAsDataURL(file);
+      }
+    } catch (err: any) {
+      console.error('JD parse error:', err);
+      setIsParsingJd(false);
+      setStatusMessage(`⚠ Failed to parse ${file.name}: ${err.message}`);
+    }
   };
 
   const handleResumeFilesSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -273,15 +313,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 />
               ) : (
                 <div
-                  onClick={() => jdFileInputRef.current?.click()}
-                  className="p-8 border-2 border-dashed border-[#004ac6]/30 bg-[#004ac6]/5 rounded-xl text-center cursor-pointer hover:bg-[#004ac6]/10 transition-colors"
+                  onClick={() => !isParsingJd && jdFileInputRef.current?.click()}
+                  className={`p-8 border-2 border-dashed border-[#004ac6]/30 bg-[#004ac6]/5 rounded-xl text-center transition-colors ${
+                    isParsingJd ? 'opacity-80 cursor-wait' : 'cursor-pointer hover:bg-[#004ac6]/10'
+                  }`}
                 >
-                  <span className="material-symbols-outlined text-4xl text-[#004ac6] mb-2">upload_file</span>
-                  <p className="font-semibold text-xs text-[#191b23]">Click to upload JD (PDF, DOCX, TXT)</p>
+                  {isParsingJd ? (
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <div className="w-8 h-8 border-3 border-[#004ac6] border-t-transparent rounded-full animate-spin" />
+                      <p className="font-bold text-xs text-[#004ac6]">Extracting Document with Gemini OCR & Structure Parser...</p>
+                      <p className="text-[10px] text-[#737686]">Parsing technical skills, qualifications, and role criteria</p>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined text-4xl text-[#004ac6] mb-2">upload_file</span>
+                      <p className="font-semibold text-xs text-[#191b23]">Click to upload JD (PDF, DOCX, TXT, Scanned Doc)</p>
+                      <p className="text-[10px] text-[#737686] mt-0.5">Automated OCR and parameter extraction enabled</p>
+                    </>
+                  )}
                   <input
                     ref={jdFileInputRef}
                     type="file"
-                    accept=".pdf,.docx,.txt"
+                    accept=".pdf,.docx,.txt,.png,.jpg,.jpeg,.webp"
                     onChange={handleJdFileUpload}
                     className="hidden"
                   />

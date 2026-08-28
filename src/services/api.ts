@@ -1,6 +1,42 @@
 import { Candidate, JobDescription } from '../types';
 
-export async function parseJobDescription(text?: string, fileData?: { name: string; mimeType: string; base64: string }): Promise<{ jd: JobDescription; rawText: string }> {
+export interface OcrResult {
+  success: boolean;
+  text: string;
+  method: string;
+  wordCount: number;
+  fileName: string;
+}
+
+export async function extractOcrDocument(payload: {
+  fileName: string;
+  fileType: string;
+  base64?: string;
+  text?: string;
+}): Promise<OcrResult> {
+  try {
+    const res = await fetch('/api/ocr-extract', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || 'Failed to extract text via OCR');
+    }
+
+    return await res.json();
+  } catch (err: any) {
+    console.error('API extractOcrDocument error:', err);
+    throw err;
+  }
+}
+
+export async function parseJobDescription(
+  text?: string,
+  fileData?: { name: string; mimeType: string; base64: string }
+): Promise<{ jd: JobDescription; rawText: string; extractionMethod?: string }> {
   try {
     const res = await fetch('/api/parse-jd', {
       method: 'POST',
@@ -17,6 +53,7 @@ export async function parseJobDescription(text?: string, fileData?: { name: stri
     return {
       jd: data.jd,
       rawText: data.rawText || text || '',
+      extractionMethod: data.extractionMethod,
     };
   } catch (err: any) {
     console.error('API parseJobDescription error:', err);
