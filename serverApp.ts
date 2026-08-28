@@ -12,16 +12,22 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 // Initialize Gemini Client
 const getGeminiClient = () => {
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return null;
-  return new GoogleGenAI({
-    apiKey,
-    httpOptions: {
-      headers: {
-        "User-Agent": "aistudio-build",
-      },
-    },
-  });
+  if (!apiKey || apiKey.trim().length === 0) return null;
+  return new GoogleGenAI({ apiKey });
 };
+
+// Helper: Run promise with timeout
+function withTimeout<T>(promise: Promise<T>, timeoutMs = 8000, label = "Operation"): Promise<T> {
+  let timer: NodeJS.Timeout;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => {
+      reject(new Error(`${label} timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+  });
+  return Promise.race([promise, timeoutPromise]).finally(() => {
+    clearTimeout(timer);
+  });
+}
 
 // Helper: Determine MIME type from filename or header
 function resolveMimeType(fileName: string, mimeType?: string): string {
@@ -98,20 +104,24 @@ Rules:
 3. Do not omit any text, numbers, or dates.
 4. Output cleanly formatted plain markdown text.`;
 
-        const ocrResponse = await ai.models.generateContent({
-          model: "gemini-3.7-flash",
-          contents: {
-            parts: [
-              { text: ocrPrompt },
-              {
-                inlineData: {
-                  mimeType: resolvedMime.startsWith("image/") ? resolvedMime : "application/pdf",
-                  data: base64Data,
+        const ocrResponse = await withTimeout(
+          ai.models.generateContent({
+            model: "gemini-3.7-flash",
+            contents: {
+              parts: [
+                { text: ocrPrompt },
+                {
+                  inlineData: {
+                    mimeType: resolvedMime.startsWith("image/") ? resolvedMime : "application/pdf",
+                    data: base64Data,
+                  },
                 },
-              },
-            ],
-          },
-        });
+              ],
+            },
+          }),
+          6000,
+          "Gemini OCR"
+        );
 
         const extractedText = ocrResponse.text?.trim();
         if (extractedText && extractedText.length > 20) {
@@ -224,9 +234,10 @@ app.post("/api/parse-jd", async (req, res) => {
     const ai = getGeminiClient();
     if (ai) {
       try {
-        const response = await ai.models.generateContent({
-          model: "gemini-3.7-flash",
-          contents: `Analyze the following Job Description and extract structured information.
+        const response = await withTimeout(
+          ai.models.generateContent({
+            model: "gemini-3.7-flash",
+            contents: `Analyze the following Job Description and extract structured information.
 Return a valid JSON object matching this schema:
 {
   "title": "Job Title",
@@ -241,23 +252,26 @@ Return a valid JSON object matching this schema:
 
 Job Description Text:
 ${jdText.substring(0, 15000)}`,
-          config: {
-            responseMimeType: "application/json",
-            responseSchema: {
-              type: Type.OBJECT,
-              properties: {
-                title: { type: Type.STRING },
-                company: { type: Type.STRING },
-                requiredSkills: { type: Type.ARRAY, items: { type: Type.STRING } },
-                preferredSkills: { type: Type.ARRAY, items: { type: Type.STRING } },
-                experienceRequired: { type: Type.STRING },
-                educationRequired: { type: Type.STRING },
-                responsibilities: { type: Type.ARRAY, items: { type: Type.STRING } },
-                keywords: { type: Type.ARRAY, items: { type: Type.STRING } },
+            config: {
+              responseMimeType: "application/json",
+              responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                  title: { type: Type.STRING },
+                  company: { type: Type.STRING },
+                  requiredSkills: { type: Type.ARRAY, items: { type: Type.STRING } },
+                  preferredSkills: { type: Type.ARRAY, items: { type: Type.STRING } },
+                  experienceRequired: { type: Type.STRING },
+                  educationRequired: { type: Type.STRING },
+                  responsibilities: { type: Type.ARRAY, items: { type: Type.STRING } },
+                  keywords: { type: Type.ARRAY, items: { type: Type.STRING } },
+                },
               },
             },
-          },
-        });
+          }),
+          6000,
+          "Gemini JD Parser"
+        );
 
         if (response.text) {
           const parsed = JSON.parse(response.text.trim());
@@ -389,13 +403,17 @@ Return a strict JSON object with this schema:
             });
           }
 
-          const response = await ai.models.generateContent({
-            model: "gemini-3.7-flash",
-            contents: { parts },
-            config: {
-              responseMimeType: "application/json",
-            },
-          });
+          const response = await withTimeout(
+            ai.models.generateContent({
+              model: "gemini-3.7-flash",
+              contents: { parts },
+              config: {
+                responseMimeType: "application/json",
+              },
+            }),
+            7000,
+            "Gemini Resume Analyzer"
+          );
 
           if (response.text) {
             const parsed = JSON.parse(response.text.trim());

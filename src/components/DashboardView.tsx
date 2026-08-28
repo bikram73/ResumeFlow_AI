@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { ActiveTab, Candidate, JobDescription } from '../types';
 import { Sidebar } from './Sidebar';
 import { Footer } from './Footer';
-import { sampleResumesBatch } from '../data';
+import { sampleResumesBatch, initialJobDescription } from '../data';
 import { parseJobDescription } from '../services/api';
 
 interface DashboardViewProps {
@@ -135,11 +135,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   };
 
   const handleStartAnalysis = async () => {
-    const currentJd = jdInputText || jobDescription.rawText;
-    if (!currentJd || currentJd.trim().length === 0) {
-      alert('Please enter or upload a Job Description first.');
-      return;
-    }
+    const currentJd = (jdInputText && jdInputText.trim().length > 0)
+      ? jdInputText.trim()
+      : (jobDescription.rawText || initialJobDescription.rawText);
 
     const itemsToProcess: StagedFileItem[] = stagedFiles.length > 0
       ? stagedFiles
@@ -432,7 +430,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           {/* Column 3: Live Progress & Status */}
-          <div className="glass-panel p-6 rounded-2xl flex flex-col justify-between border border-[#c3c6d7]/30">
+          <div id="ai-pipeline-status-card" className="glass-panel p-6 rounded-2xl flex flex-col justify-between border border-[#c3c6d7]/30 shadow-sm bg-white/70">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h4 className="font-headline-sm text-base font-bold text-[#191b23]">AI Pipeline Status</h4>
