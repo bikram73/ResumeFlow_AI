@@ -300,13 +300,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                     <div className="w-8 h-8 rounded-full bg-[#004ac6]/10 flex items-center justify-center text-[#004ac6]">
                       <span className="material-symbols-outlined text-[18px]">check</span>
                     </div>
-                    <span className="font-semibold text-sm">Average screening time reduced by 94%</span>
+                    <span className="font-semibold text-sm">Multi-role JD re-screening with adaptive scoring</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-[#004ac6]/10 flex items-center justify-center text-[#004ac6]">
                       <span className="material-symbols-outlined text-[18px]">check</span>
                     </div>
-                    <span className="font-semibold text-sm">Skill alignment accuracy of 98.2%</span>
+                    <span className="font-semibold text-sm">Multimodal OCR for PDF, DOCX, TXT, and scanned images</span>
                   </div>
                 </div>
               </div>
@@ -339,22 +339,33 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
       <section className="py-20 bg-[#191b23] text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#004ac6]/20 to-transparent"></div>
         <div className="max-w-[1440px] mx-auto px-6 text-center relative z-10">
-          <h2 className="font-display-lg text-2xl md:text-4xl font-bold mb-4">Ready to Automate Your Hiring?</h2>
-          <p className="text-[#c3c6d7] text-base md:text-lg max-w-2xl mx-auto mb-10">
-            Join 500+ enterprises optimizing their talent acquisition with ResumeFlow AI.
+          <h2 className="font-display-lg text-2xl md:text-4xl font-bold mb-4">
+            Accelerate Your Recruitment Pipeline Today
+          </h2>
+          <p className="text-[#c3c6d7] text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+            Transform manual resume review into instant, explainable, and multi-role ranked shortlists with ResumeFlow AI.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <div className="flex flex-wrap justify-center items-center gap-4">
             <button
               onClick={() => setActiveTab('dashboard')}
-              className="bg-[#004ac6] text-white px-8 py-3.5 rounded-xl font-semibold text-base hover:bg-[#0053db] transition-all shadow-lg"
+              className="bg-[#004ac6] text-white px-8 py-3.5 rounded-xl font-semibold text-base hover:bg-[#0053db] active:scale-95 transition-all shadow-lg shadow-[#004ac6]/30 flex items-center gap-2 cursor-pointer"
             >
-              Start Free Trial
+              <span className="material-symbols-outlined text-lg">rocket_launch</span>
+              <span>Start AI Screening</span>
             </button>
             <button
-              onClick={() => alert('Contacting Sales team...')}
-              className="border border-[#c3c6d7] text-white px-8 py-3.5 rounded-xl font-semibold text-base hover:bg-white/10 transition-all"
+              onClick={() => setActiveTab('candidates')}
+              className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-8 py-3.5 rounded-xl font-semibold text-base active:scale-95 transition-all flex items-center gap-2 cursor-pointer backdrop-blur-md"
             >
-              Contact Sales
+              <span className="material-symbols-outlined text-lg">groups</span>
+              <span>Explore Candidates</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('utility')}
+              className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-8 py-3.5 rounded-xl font-semibold text-base active:scale-95 transition-all flex items-center gap-2 cursor-pointer backdrop-blur-md"
+            >
+              <span className="material-symbols-outlined text-lg">analytics</span>
+              <span>Utility & Metrics</span>
             </button>
           </div>
         </div>
