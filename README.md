@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/bikram73/ResumeFlow_AI/main/public/favicon.svg" alt="ResumeFlow AI Logo" width="96" height="96" />
+<img src="./public/favicon.svg" alt="ResumeFlow AI Logo" width="96" height="96" />
 
 ### *Enterprise-Grade Multimodal Resume Intelligence & Candidate Ranking Platform*
 
