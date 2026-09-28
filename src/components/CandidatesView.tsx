@@ -435,7 +435,7 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
         onDeleteCandidate={onDeleteCandidate}
       />
 
-      <Footer />
+      <Footer setActiveTab={setActiveTab} />
     </div>
   );
 };

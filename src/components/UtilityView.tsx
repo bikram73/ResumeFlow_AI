@@ -346,7 +346,7 @@ export const UtilityView: React.FC<UtilityViewProps> = ({ candidates, setActiveT
         </div>
       </main>
 
-      <Footer />
+      <Footer setActiveTab={setActiveTab} />
     </div>
   );
 };

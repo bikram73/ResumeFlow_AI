@@ -308,7 +308,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
         </div>
       </section>
 
-      <Footer />
+      <Footer setActiveTab={setActiveTab} />
     </div>
   );
 };

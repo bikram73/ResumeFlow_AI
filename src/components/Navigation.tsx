@@ -42,7 +42,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
                 <span>Home Page</span>
               </button>
               {[
-                { id: 'dashboard', label: 'Solutions (Dashboard)' },
+                { id: 'dashboard', label: 'Solutions' },
                 { id: 'candidates', label: 'Candidates' },
                 { id: 'utility', label: 'Utility Preview' },
               ].map((tab) => {
@@ -51,13 +51,13 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as ActiveTab)}
-                    className={`h-10 px-3.5 rounded-lg font-semibold text-sm transition-all duration-150 flex items-center justify-center cursor-pointer ${
+                    className={`h-9 px-3.5 rounded-xl font-semibold text-xs md:text-sm transition-all duration-150 flex items-center gap-1.5 cursor-pointer ${
                       isActive
-                        ? 'text-[#004ac6] bg-[#004ac6]/10 font-bold'
-                        : 'text-[#434655] hover:text-[#004ac6] hover:bg-[#004ac6]/5'
+                        ? 'text-white bg-[#004ac6] font-bold shadow-sm'
+                        : 'text-[#434655] bg-[#ededf9]/70 hover:text-[#004ac6] hover:bg-[#004ac6]/10'
                     }`}
                   >
-                    {tab.label}
+                    <span>{tab.label}</span>
                   </button>
                 );
               })}
@@ -65,9 +65,18 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
           </div>
 
           <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/bikram73/ResumeFlow_AI/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden lg:flex items-center gap-1.5 bg-[#191b23] text-white hover:bg-black px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[16px]">code</span>
+              <span>GitHub</span>
+            </a>
             <button
               onClick={() => setActiveTab(activeTab === 'landing' ? 'dashboard' : 'landing')}
-              className="bg-[#004ac6] text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm hover:bg-[#1d4ed8] active:scale-95 transition-all flex items-center gap-2"
+              className="bg-[#004ac6] text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm hover:bg-[#1d4ed8] active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
             >
               <span>{activeTab === 'landing' ? 'Launch App' : 'Main Website'}</span>
               <span className="material-symbols-outlined text-[18px]">

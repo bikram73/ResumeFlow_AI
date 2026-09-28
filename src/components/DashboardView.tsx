@@ -813,7 +813,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </main>
 
-      <Footer />
+      <Footer setActiveTab={setActiveTab} />
     </div>
   );
 };
