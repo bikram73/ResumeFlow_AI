@@ -10,67 +10,61 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
   return (
     <>
       {/* Top Bar */}
-      <header className="fixed top-0 w-full h-[72px] z-50 bg-white/80 backdrop-blur-xl border-b border-[#c3c6d7]/30 flex justify-between items-center px-4 md:px-8">
-        <div className="flex items-center gap-6">
-          <button 
-            onClick={() => setActiveTab('landing')}
-            className="flex items-center gap-2.5 text-left focus:outline-none group cursor-pointer"
-          >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#004ac6] via-[#1d4ed8] to-[#3b82f6] flex items-center justify-center text-white shadow-md shadow-[#004ac6]/25 transition-transform duration-200 group-hover:scale-105">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <path d="M9 13l2 2 4-4" />
-              </svg>
-            </div>
-            <span className="font-display-lg text-xl md:text-2xl font-bold text-[#004ac6] tracking-tight flex items-center gap-1.5">
-              ResumeFlow <span className="text-xs bg-[#2563eb]/10 text-[#004ac6] px-1.5 py-0.5 rounded-md font-semibold tracking-normal border border-[#004ac6]/20">AI</span>
-            </span>
-          </button>
-
-          <nav className="hidden md:flex items-center gap-6">
-            <button
+      <header className="fixed top-0 left-0 right-0 w-full h-[72px] z-50 bg-white/85 backdrop-blur-xl border-b border-[#c3c6d7]/30">
+        <div className="max-w-7xl mx-auto w-full h-full flex items-center justify-between px-4 md:px-8">
+          <div className="flex items-center gap-8 h-full">
+            <button 
               onClick={() => setActiveTab('landing')}
-              className={`font-semibold text-sm transition-colors duration-200 ${
-                activeTab === 'landing' ? 'text-[#004ac6] border-b-2 border-[#004ac6] py-1' : 'text-[#434655] hover:text-[#004ac6]'
-              }`}
+              className="flex items-center gap-3 text-left focus:outline-none group cursor-pointer select-none"
             >
-              Product
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#004ac6] via-[#1d4ed8] to-[#3b82f6] flex items-center justify-center text-white shadow-md shadow-[#004ac6]/20 transition-transform duration-200 group-hover:scale-105 shrink-0">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <path d="M9 13l2 2 4-4" />
+                </svg>
+              </div>
+              <span className="font-display-lg text-xl md:text-2xl font-bold text-[#004ac6] tracking-tight flex items-center gap-1.5">
+                ResumeFlow <span className="text-[11px] font-bold bg-[#2563eb]/10 text-[#004ac6] px-1.5 py-0.5 rounded-md tracking-normal border border-[#004ac6]/20 leading-none">AI</span>
+              </span>
             </button>
-            <button
-              onClick={() => setActiveTab('dashboard')}
-              className={`font-semibold text-sm transition-colors duration-200 ${
-                activeTab === 'dashboard' ? 'text-[#004ac6] border-b-2 border-[#004ac6] py-1' : 'text-[#434655] hover:text-[#004ac6]'
-              }`}
-            >
-              Solutions (Dashboard)
-            </button>
-            <button
-              onClick={() => setActiveTab('candidates')}
-              className={`font-semibold text-sm transition-colors duration-200 ${
-                activeTab === 'candidates' ? 'text-[#004ac6] border-b-2 border-[#004ac6] py-1' : 'text-[#434655] hover:text-[#004ac6]'
-              }`}
-            >
-              Candidates
-            </button>
-            <button
-              onClick={() => setActiveTab('utility')}
-              className={`font-semibold text-sm transition-colors duration-200 ${
-                activeTab === 'utility' ? 'text-[#004ac6] border-b-2 border-[#004ac6] py-1' : 'text-[#434655] hover:text-[#004ac6]'
-              }`}
-            >
-              Utility Preview
-            </button>
-          </nav>
-        </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setActiveTab(activeTab === 'landing' ? 'dashboard' : 'landing')}
-            className="bg-[#004ac6] text-white px-5 py-2 rounded-xl font-semibold text-sm shadow-sm hover:opacity-90 active:scale-95 transition-all"
-          >
-            {activeTab === 'landing' ? 'Launch App' : 'Main Website'}
-          </button>
+            <nav className="hidden md:flex items-center gap-1 h-full">
+              {[
+                { id: 'landing', label: 'Product' },
+                { id: 'dashboard', label: 'Solutions (Dashboard)' },
+                { id: 'candidates', label: 'Candidates' },
+                { id: 'utility', label: 'Utility Preview' },
+              ].map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id as ActiveTab)}
+                    className={`h-10 px-3.5 rounded-lg font-semibold text-sm transition-all duration-150 flex items-center justify-center cursor-pointer ${
+                      isActive
+                        ? 'text-[#004ac6] bg-[#004ac6]/10 font-bold'
+                        : 'text-[#434655] hover:text-[#004ac6] hover:bg-[#004ac6]/5'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setActiveTab(activeTab === 'landing' ? 'dashboard' : 'landing')}
+              className="bg-[#004ac6] text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm hover:bg-[#1d4ed8] active:scale-95 transition-all flex items-center gap-2"
+            >
+              <span>{activeTab === 'landing' ? 'Launch App' : 'Main Website'}</span>
+              <span className="material-symbols-outlined text-[18px]">
+                {activeTab === 'landing' ? 'arrow_forward' : 'home'}
+              </span>
+            </button>
+          </div>
         </div>
       </header>
 
