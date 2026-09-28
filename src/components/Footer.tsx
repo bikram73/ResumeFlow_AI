@@ -18,7 +18,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                 <path d="M9 13l2 2 4-4" />
               </svg>
             </div>
-            <span className="font-headline-sm text-base md:text-lg text-[#191b23] font-bold tracking-tight flex items-center gap-1.5">
+            <span className="font-headline-sm text-base md:text-lg text-[#004ac6] font-bold tracking-tight flex items-center gap-1.5">
               ResumeFlow <span className="text-[10px] font-bold bg-[#2563eb]/10 text-[#004ac6] px-1 py-0.5 rounded leading-none border border-[#004ac6]/20">AI</span>
             </span>
           </div>
