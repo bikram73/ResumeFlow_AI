@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ActiveTab } from '../types';
 import { Footer } from './Footer';
 
@@ -7,6 +7,39 @@ interface LandingPageProps {
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaq(prev => (prev === index ? null : index));
+  };
+
+  const faqs = [
+    {
+      q: "How are candidate match scores calculated?",
+      a: "ResumeFlow AI uses a rigorous 6-factor weighted formula: Skill Match (40%), Relevant Experience (25%), Project Alignment (15%), Education (10%), Certifications (5%), and Soft Skills (5%). These components are mathematically computed and normalized to provide transparent, explainable scores between 0% and 100%.",
+      icon: "calculate"
+    },
+    {
+      q: "What file types are supported for resume uploads?",
+      a: "You can upload PDF files, Microsoft Word (.docx), plain text (.txt, .md), and scanned image resumes (.png, .jpg, .jpeg, .webp). The system uses Gemini Multimodal Vision OCR and local stream processors with automatic failover.",
+      icon: "description"
+    },
+    {
+      q: "Can I evaluate the same resume for different roles?",
+      a: "Yes! When you change the Job Description and re-screen, the engine dynamically recalculates the candidate's scores, highlights role-specific strengths and missing skills, and displays the exact target role on each candidate card.",
+      icon: "alt_route"
+    },
+    {
+      q: "Is applicant data kept private and secure?",
+      a: "All resume analysis and extraction is processed securely via server-side proxies, and candidate records are stored strictly in your browser's local session for maximum data sovereignty. No sensitive candidate PII is persisted on third-party databases.",
+      icon: "lock"
+    },
+    {
+      q: "How do the CSV and JSON exports work?",
+      a: "With a single click on the Solutions or Candidates screen, you can export your entire screened shortlist including candidate names, roles, contact details, match scores, breakdown percentages, missing skills, and AI executive summaries.",
+      icon: "file_download"
+    }
+  ];
   return (
     <div className="min-h-screen bg-[#faf8ff] text-[#191b23] flex flex-col pt-[72px]">
       {/* Hero Section */}
@@ -369,54 +402,71 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
       <section className="py-20 bg-white border-t border-[#c3c6d7]/30">
         <div className="max-w-[1000px] mx-auto px-6">
           <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-[#004ac6]/10 text-[#004ac6] px-3.5 py-1.5 rounded-full text-xs font-bold mb-4">
+              <span className="material-symbols-outlined text-[16px]">quiz</span>
+              Recruiter Knowledge Base
+            </div>
             <h2 className="font-headline-lg text-2xl md:text-3xl font-bold mb-3">
               Frequently Asked Questions
             </h2>
             <p className="text-[#434655] text-sm md:text-base">
-              Everything you need to know about ResumeFlow AI's screening algorithms and privacy architecture.
+              Click any question below to explore details about ResumeFlow AI's screening algorithms, scoring models, and privacy architecture.
             </p>
           </div>
 
-          <div className="space-y-4 text-left">
-            <div className="p-6 rounded-2xl bg-[#faf8ff] border border-[#c3c6d7]/40">
-              <h4 className="font-bold text-base text-[#191b23] mb-2 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#004ac6] text-xl">help</span>
-                How are candidate match scores calculated?
-              </h4>
-              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
-                ResumeFlow AI uses a rigorous 6-factor weighted formula: Skill Match (40%), Relevant Experience (25%), Project Alignment (15%), Education (10%), Certifications (5%), and Soft Skills (5%).
-              </p>
-            </div>
+          <div className="space-y-3.5 text-left">
+            {faqs.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  className={`rounded-2xl transition-all duration-200 border ${
+                    isOpen
+                      ? 'bg-[#faf8ff] border-[#004ac6]/40 shadow-md ring-2 ring-[#004ac6]/10'
+                      : 'bg-[#faf8ff]/70 border-[#c3c6d7]/40 hover:bg-[#faf8ff] hover:border-[#004ac6]/20'
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleFaq(idx)}
+                    className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 cursor-pointer focus:outline-none"
+                    aria-expanded={isOpen}
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <div
+                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                          isOpen
+                            ? 'bg-[#004ac6] text-white'
+                            : 'bg-[#004ac6]/10 text-[#004ac6]'
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-[20px]">
+                          {faq.icon}
+                        </span>
+                      </div>
+                      <span className="font-bold text-sm sm:text-base text-[#191b23]">
+                        {faq.q}
+                      </span>
+                    </div>
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                        isOpen ? 'rotate-180 bg-[#004ac6]/15 text-[#004ac6]' : 'text-[#737686] bg-black/5'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[20px]">
+                        expand_more
+                      </span>
+                    </div>
+                  </button>
 
-            <div className="p-6 rounded-2xl bg-[#faf8ff] border border-[#c3c6d7]/40">
-              <h4 className="font-bold text-base text-[#191b23] mb-2 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#004ac6] text-xl">help</span>
-                What file types are supported for resume uploads?
-              </h4>
-              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
-                You can upload PDF files, Microsoft Word (.docx), plain text (.txt, .md), and scanned image resumes (.png, .jpg, .jpeg, .webp).
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#faf8ff] border border-[#c3c6d7]/40">
-              <h4 className="font-bold text-base text-[#191b23] mb-2 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#004ac6] text-xl">help</span>
-                Can I evaluate the same resume for different roles?
-              </h4>
-              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
-                Yes! When you change the Job Description and re-screen, the engine dynamically recalculates the candidate's scores, highlights role-specific strengths, and displays the exact target role on each candidate card.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#faf8ff] border border-[#c3c6d7]/40">
-              <h4 className="font-bold text-base text-[#191b23] mb-2 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#004ac6] text-xl">help</span>
-                Is applicant data kept private and secure?
-              </h4>
-              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
-                All resume analysis and extraction is processed securely via server-side proxies, and candidate records are stored strictly in your browser session for maximum data sovereignty.
-              </p>
-            </div>
+                  {isOpen && (
+                    <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-1 text-xs sm:text-sm text-[#434655] leading-relaxed border-t border-[#c3c6d7]/20 mt-1 animate-fade-in pl-[56px] sm:pl-[68px]">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
