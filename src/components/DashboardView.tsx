@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { ActiveTab, Candidate, JobDescription } from '../types';
 import { Footer } from './Footer';
-import { sampleResumesBatch, initialJobDescription } from '../data';
+import { sampleResumesBatch, initialJobDescription, sampleJobDescriptions } from '../data';
 import { parseJobDescription } from '../services/api';
 
 interface DashboardViewProps {
@@ -134,6 +134,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     }));
     setStagedFiles(samples);
     setStatusMessage('✓ Loaded 3 sample resumes into queue.');
+    setTimeout(() => setStatusMessage(''), 4000);
+  };
+
+  const handleSelectSampleJd = (sample: JobDescription) => {
+    setJobDescription(sample);
+    setJdInputText(sample.rawText);
+    setJdMode('text');
+    setStatusMessage(`✓ Loaded Sample JD: ${sample.title} (${sample.company})`);
     setTimeout(() => setStatusMessage(''), 4000);
   };
 
@@ -284,7 +292,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="lg:col-span-2 space-y-6">
             {/* Job Description Panel */}
             <div className="glass-panel p-6 rounded-2xl border border-[#c3c6d7]/30">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[#004ac6]">assignment</span>
                   <h3 className="font-headline-sm text-lg font-bold text-[#191b23]">1. Job Description (JD)</h3>
@@ -292,16 +300,53 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setJdMode('text')}
-                    className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${jdMode === 'text' ? 'bg-[#004ac6] text-white' : 'bg-[#ededf9] text-[#434655]'}`}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${jdMode === 'text' ? 'bg-[#004ac6] text-white' : 'bg-[#ededf9] text-[#434655] hover:bg-[#c3c6d7]/40'}`}
                   >
                     Text Input
                   </button>
                   <button
                     onClick={() => setJdMode('file')}
-                    className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${jdMode === 'file' ? 'bg-[#004ac6] text-white' : 'bg-[#ededf9] text-[#434655]'}`}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${jdMode === 'file' ? 'bg-[#004ac6] text-white' : 'bg-[#ededf9] text-[#434655] hover:bg-[#c3c6d7]/40'}`}
                   >
                     Upload File
                   </button>
+                </div>
+              </div>
+
+              {/* Sample JDs Quick Selector */}
+              <div className="mb-3.5 p-3 bg-[#f0f4ff]/80 border border-[#004ac6]/15 rounded-xl">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#004ac6]">
+                    <span className="material-symbols-outlined text-sm">auto_stories</span>
+                    <span>Sample JD Presets (Click to Load):</span>
+                  </div>
+                  {jobDescription.title && (
+                    <span className="text-[10px] font-semibold text-[#555992] bg-white/80 px-2 py-0.5 rounded-md border border-[#004ac6]/10 truncate max-w-[220px]">
+                      Active: <span className="font-bold text-[#004ac6]">{jobDescription.title}</span>
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {sampleJobDescriptions.map((sample) => {
+                    const isSelected = jobDescription.title === sample.title || (jobDescription.id && jobDescription.id === sample.id);
+                    return (
+                      <button
+                        key={sample.id}
+                        type="button"
+                        onClick={() => handleSelectSampleJd(sample)}
+                        className={`text-xs px-2.5 py-1.5 rounded-lg font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                          isSelected
+                            ? 'bg-[#004ac6] text-white shadow-sm shadow-[#004ac6]/25 font-bold scale-[1.02]'
+                            : 'bg-white text-[#191b23] border border-[#c3c6d7]/50 hover:border-[#004ac6] hover:bg-[#f8faff]'
+                        }`}
+                      >
+                        <span className="text-[10px] opacity-70">
+                          {sample.id === 'jd_1' ? '🎨' : sample.id === 'jd_2' ? '💻' : sample.id === 'jd_3' ? '🧠' : sample.id === 'jd_4' ? '☁️' : sample.id === 'jd_5' ? '📋' : '🛡️'}
+                        </span>
+                        <span>{sample.title}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

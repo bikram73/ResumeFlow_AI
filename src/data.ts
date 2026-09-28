@@ -34,6 +34,176 @@ Qualifications:
 - B.S./B.A. in Design, HCI, Computer Science or equivalent practical experience.`
 };
 
+export const sampleJobDescriptions: JobDescription[] = [
+  initialJobDescription,
+  {
+    id: 'jd_2',
+    title: 'Full-Stack AI Software Engineer',
+    company: 'NextGen Autonomous Labs',
+    requiredSkills: ['React', 'TypeScript', 'Node.js', 'Python', 'FastAPI', 'PostgreSQL', 'Docker'],
+    preferredSkills: ['LangChain', 'Vector DBs (Pinecone/Chroma)', 'GraphQL', 'Tailwind CSS', 'AWS'],
+    experienceRequired: '4+ years in Full-Stack Web Development & AI APIs',
+    educationRequired: "Bachelor's or Master's degree in Computer Science or Software Engineering",
+    responsibilities: [
+      'Architect resilient frontend and backend services integrating LLM orchestration APIs',
+      'Build scalable REST and GraphQL APIs with FastAPI and Node.js microservices',
+      'Implement real-time vector search and retrieval-augmented generation (RAG) pipelines',
+      'Write clean, modular TypeScript and Python code with rigorous unit and integration tests'
+    ],
+    keywords: ['react', 'typescript', 'python', 'fastapi', 'llm', 'rag', 'docker', 'postgresql', 'apis'],
+    rawText: `Full-Stack AI Software Engineer
+NextGen Autonomous Labs - New York, NY (Hybrid)
+
+About the Role:
+We are looking for an experienced Full-Stack AI Software Engineer to build scalable customer-facing applications powered by large language models and intelligent automation.
+
+Responsibilities:
+- Design and implement modern React/TypeScript user interfaces backed by performant FastAPI/Node.js microservices.
+- Integrate vector search indexing, embeddings, and RAG architectures using Python and modern LLM frameworks.
+- Optimize database performance in PostgreSQL and manage containerized deployments with Docker and AWS.
+- Collaborate with AI researchers and product managers to deliver rapid features with high test coverage.
+
+Requirements:
+- 4+ years of professional full-stack software development experience.
+- Strong proficiency in TypeScript, React, Python, and modern web frameworks (FastAPI/Express).
+- Experience integrating RESTful/GraphQL APIs and AI inference pipelines.
+- Solid understanding of relational databases (PostgreSQL), Docker, and Git workflows.
+- B.S. or M.S. in Computer Science or related technical discipline.`
+  },
+  {
+    id: 'jd_3',
+    title: 'Senior Machine Learning & NLP Engineer',
+    company: 'Cognitive Intelligence Corp',
+    requiredSkills: ['Python', 'PyTorch', 'Hugging Face', 'NLP / Transformers', 'MLOps', 'CUDA'],
+    preferredSkills: ['TensorRT', 'vLLM', 'Kubernetes', 'Ray', 'Weights & Biases', 'Fine-Tuning'],
+    experienceRequired: '5+ years in Machine Learning, Deep Learning, and NLP',
+    educationRequired: "Master's or Ph.D. in Computer Science, Machine Learning, or AI",
+    responsibilities: [
+      'Train, fine-tune, and evaluate transformer models and LLMs for domain-specific NLP benchmarks',
+      'Optimize model inference latency, quantization, and GPU throughput using vLLM and TensorRT',
+      'Design end-to-end MLOps pipelines for continuous dataset curation, evaluation, and deployment',
+      'Publish internal benchmarks and collaborate with engineering teams on production integration'
+    ],
+    keywords: ['pytorch', 'nlp', 'transformers', 'hugging face', 'llm', 'fine-tuning', 'mlops', 'python'],
+    rawText: `Senior Machine Learning & NLP Engineer
+Cognitive Intelligence Corp - San Francisco, CA
+
+About the Role:
+Join our Applied AI Core team to train, fine-tune, and deploy high-throughput generative models and NLP pipelines for enterprise reasoning.
+
+Key Responsibilities:
+- Lead model training, LoRA/PEFT fine-tuning, and alignment for state-of-the-art open source LLMs.
+- Build resilient MLOps pipelines covering automated data preprocessing, synthetic dataset generation, and evaluation harness.
+- Optimize production inference on NVIDIA GPUs using TensorRT-LLM, vLLM, and distributed Ray clusters.
+- Partner with security and compliance teams to enforce safety filters and guardrails.
+
+Qualifications:
+- 5+ years building and deploying deep learning and NLP architectures in production.
+- Deep expertise with PyTorch, Hugging Face Transformers, Tokenizers, and CUDA acceleration.
+- Hands-on experience with LLM fine-tuning, quantization (AWQ/GPTQ), and evaluation metrics.
+- M.S. or Ph.D. in Computer Science, Machine Learning, AI, or equivalent quantitative discipline.`
+  },
+  {
+    id: 'jd_4',
+    title: 'Cloud DevOps & Infrastructure Architect',
+    company: 'CloudScale Global Infrastructure',
+    requiredSkills: ['AWS', 'Kubernetes', 'Terraform', 'CI/CD (GitHub Actions)', 'Linux', 'Docker'],
+    preferredSkills: ['Helm', 'Prometheus / Grafana', 'ArgoCD', 'Python/Go scripting', 'SOC2 / ISO 27001'],
+    experienceRequired: '6+ years in DevOps, SRE, or Cloud Infrastructure Architecture',
+    educationRequired: "Bachelor's degree in Computer Science, IT, or equivalent practical experience",
+    responsibilities: [
+      'Design multi-region, highly available cloud infrastructure across AWS using Infrastructure-as-Code (Terraform)',
+      'Manage production Kubernetes (EKS) clusters, autoscaling policies, and container security',
+      'Build zero-downtime CI/CD pipelines with automated vulnerability scanning and blue/green deployments',
+      'Implement enterprise observability, synthetic monitoring, SLA alerts, and incident response runbooks'
+    ],
+    keywords: ['aws', 'kubernetes', 'terraform', 'ci/cd', 'docker', 'helm', 'prometheus', 'sre', 'devops'],
+    rawText: `Cloud DevOps & Infrastructure Architect
+CloudScale Global Infrastructure - Austin, TX (Remote)
+
+About the Role:
+We are seeking a senior Cloud DevOps Architect to spearhead our multi-tenant cloud platform, automated deployment infrastructure, and 99.99% reliability SLAs.
+
+Key Responsibilities:
+- Author and maintain declarative Terraform modules for VPCs, EKS clusters, RDS instances, and IAM security perimeters.
+- Maintain high-scale Kubernetes workloads, service meshes, ingress controllers, and GPU compute pools.
+- Construct resilient GitOps workflows using ArgoCD, GitHub Actions, and artifact registries.
+- Establish observability dashboards using Prometheus, Grafana, OpenTelemetry, and automated paging.
+
+Requirements:
+- 6+ years of hands-on experience in DevOps, Site Reliability Engineering, or Cloud Architecture.
+- Mastery of AWS core services (EKS, VPC, IAM, RDS, Route53, S3, CloudFront).
+- Strong proficiency with Terraform, Kubernetes, Docker, and Linux systems administration.
+- Experience with GitOps, container security scanning (Trivy/Snyk), and compliance frameworks.`
+  },
+  {
+    id: 'jd_5',
+    title: 'Senior Technical Product Manager - AI & SaaS',
+    company: 'Vanguard Enterprise Solutions',
+    requiredSkills: ['Product Strategy', 'Technical Roadmapping', 'AI/ML Product Lifecycle', 'User Research', 'Agile / Scrum'],
+    preferredSkills: ['SQL & Data Analytics', 'API Architecture', 'B2B Enterprise SaaS', 'GTM Strategy'],
+    experienceRequired: '5+ years in Product Management for Enterprise Software / AI Products',
+    educationRequired: "Bachelor's degree in Business, Computer Science, Engineering, or MBA",
+    responsibilities: [
+      'Define product vision, quarterly roadmap, and PRDs for flagship AI workflow automation products',
+      'Conduct customer discovery interviews with Fortune 500 enterprise HR and talent leaders',
+      'Work side-by-side with engineering, ML research, and design teams to drive sprint execution',
+      'Track north-star product metrics, adoption funnels, retention, and enterprise customer satisfaction'
+    ],
+    keywords: ['product management', 'ai', 'saas', 'roadmapping', 'prd', 'agile', 'user stories', 'strategy'],
+    rawText: `Senior Technical Product Manager - AI & Enterprise SaaS
+Vanguard Enterprise Solutions - Boston, MA (Hybrid)
+
+About the Role:
+We are seeking a high-impact Technical Product Manager to lead the evolution of our enterprise AI platform. You will bridge customer needs, AI model capabilities, and commercial strategy.
+
+Responsibilities:
+- Own the end-to-end product roadmap from discovery to launch for AI-powered enterprise modules.
+- Translate ambiguous client requirements into clear, prioritized engineering specs and user stories.
+- Partner closely with UX designers to craft seamless product experiences for enterprise users.
+- Drive cross-functional alignment across Engineering, Data Science, Marketing, and Sales.
+
+Requirements:
+- 5+ years of software product management experience, preferably in B2B SaaS or AI-driven platforms.
+- Strong technical fluency with APIs, cloud architectures, and machine learning fundamentals.
+- Proven track record of shipping complex software products with measurable business impact.
+- Exceptional analytical skills with proficiency in SQL, amplitude, and quantitative user data.`
+  },
+  {
+    id: 'jd_6',
+    title: 'Senior Cybersecurity & DevSecOps Engineer',
+    company: 'Fortress Threat Intelligence',
+    requiredSkills: ['Cloud Security', 'Vulnerability Assessment', 'SIEM / SOC', 'DevSecOps', 'IAM / Zero Trust', 'Python/Bash'],
+    preferredSkills: ['AWS Security Hub', 'Snyk / SonarQube', 'Incident Response', 'CISSP / CEH', 'Kubernetes Security'],
+    experienceRequired: '5+ years in Information Security, Application Security, or DevSecOps',
+    educationRequired: "Bachelor's in Cybersecurity, Computer Science, Information Security, or equivalent",
+    responsibilities: [
+      'Implement Zero Trust security architecture and automated cloud security guardrails across AWS/GCP',
+      'Embed static (SAST), dynamic (DAST), and container security scanners directly into developer CI/CD pipelines',
+      'Conduct threat modeling, penetration test reviews, and vulnerability remediations with engineering teams',
+      'Manage security telemetry, SIEM logging, incident response procedures, and audit compliance'
+    ],
+    keywords: ['cybersecurity', 'devsecops', 'siem', 'zero trust', 'cloud security', 'penetration testing', 'iam'],
+    rawText: `Senior Cybersecurity & DevSecOps Engineer
+Fortress Threat Intelligence - Seattle, WA (Remote)
+
+About the Role:
+Fortress is looking for a Senior Cybersecurity Engineer to champion our application security posture, cloud compliance, and automated DevSecOps pipelines.
+
+Key Responsibilities:
+- Integrate automated SAST, DAST, SCA, and secret detection tools into developer pull-request workflows.
+- Architect cloud security policies, least-privilege IAM roles, KMS encryption, and network segmentation.
+- Monitor threat detection logs, SIEM dashboards, and coordinate emergency incident response.
+- Perform security architecture reviews for new cloud services and AI integrations.
+
+Qualifications:
+- 5+ years of cybersecurity and application security experience.
+- In-depth understanding of OWASP Top 10, cloud security best practices (AWS/GCP), and Zero Trust principles.
+- Experience with security tooling: Snyk, Trivy, SonarQube, AWS GuardDuty, Splunk/Datadog.
+- Industry certifications like CISSP, CISM, AWS Certified Security Specialist, or CEH are highly valued.`
+  }
+];
+
 export const sampleResumesBatch = [
   {
     fileName: 'Alex_Chen_Staff_Designer.pdf',
