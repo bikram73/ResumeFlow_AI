@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ActiveTab, Candidate } from '../types';
-import { Sidebar } from './Sidebar';
 import { Footer } from './Footer';
 import { CandidateDrawer } from './CandidateDrawer';
 
@@ -39,9 +38,7 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
 
   return (
     <div className="flex flex-col min-h-screen bg-[#faf8ff] pt-[72px]">
-      <Sidebar activeTab="candidates" setActiveTab={setActiveTab} />
-
-      <main className="flex-1 md:ml-64 p-4 md:p-8 overflow-y-auto custom-scrollbar">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 overflow-y-auto custom-scrollbar">
         {/* Header & Stats Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 text-left">
           <div>
@@ -294,7 +291,7 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
         onClose={() => setDrawerOpen(false)}
       />
 
-      <Footer hasSidebar={true} />
+      <Footer />
     </div>
   );
 };

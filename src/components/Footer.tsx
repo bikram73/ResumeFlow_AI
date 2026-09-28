@@ -1,12 +1,8 @@
 import React from 'react';
 
-interface FooterProps {
-  hasSidebar?: boolean;
-}
-
-export const Footer: React.FC<FooterProps> = ({ hasSidebar = false }) => {
+export const Footer: React.FC = () => {
   return (
-    <footer className={`${hasSidebar ? 'md:ml-64' : ''} w-full py-8 bg-[#e1e2ed]/50 backdrop-blur-md border-t border-[#c3c6d7]/20`}>
+    <footer className="w-full py-8 bg-[#e1e2ed]/50 backdrop-blur-md border-t border-[#c3c6d7]/20">
       <div className="flex flex-col md:flex-row justify-between items-center px-6 max-w-[1440px] mx-auto gap-4">
         <div className="flex flex-col items-center md:items-start">
           <span className="font-headline-sm text-base md:text-lg text-[#191b23] font-black tracking-tight">

@@ -22,7 +22,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
           </h1>
 
           <p className="font-body-lg text-base md:text-lg text-[#434655] max-w-2xl mb-10 leading-relaxed">
-            Upload one Job Description and multiple resumes... instantly. Let our Gemini-powered engine rank and analyze talent with surgical precision.
+            Upload one Job Description and multiple resumes... instantly. Let our neural AI engine rank and analyze talent with surgical precision.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
@@ -83,7 +83,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                         <div className="text-[#004ac6] font-bold text-lg">95% Match</div>
                         <div className="text-[10px] text-[#943700] flex items-center gap-1 font-medium">
                           <span className="material-symbols-outlined text-[12px] material-symbols-outlined-filled">auto_awesome</span>
-                          Gemini AI Analysis Complete
+                          AI Analysis Complete
                         </div>
                       </div>
                     </div>
@@ -206,7 +206,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                 <span className="material-symbols-outlined text-[#712ae2] text-[40px]">bolt</span>
               </div>
               <h4 className="font-headline-sm text-lg font-bold mb-2">2. AI Processing</h4>
-              <p className="text-[#434655] text-sm px-4">Our Gemini-powered engine analyzes experience, skills, and nuances within seconds.</p>
+              <p className="text-[#434655] text-sm px-4">Our advanced AI engine analyzes experience, skills, and nuances within seconds.</p>
             </div>
 
             {/* Step 3 */}
@@ -275,10 +275,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
           <p className="text-xs text-[#737686] uppercase tracking-widest font-bold mb-8">Built with the World's Most Powerful Tech</p>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-75">
             <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#004ac6]">code</span> React</span>
-            <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#712ae2]">flash_on</span> FastAPI</span>
-            <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#943700]">diamond</span> Gemini AI</span>
+            <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#712ae2]">flash_on</span> Node.js</span>
+            <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#943700]">diamond</span> Neural AI</span>
             <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#004ac6]">storage</span> PostgreSQL</span>
-            <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#712ae2]">cloud</span> AWS</span>
+            <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#712ae2]">cloud</span> Cloud Engine</span>
           </div>
         </div>
       </section>

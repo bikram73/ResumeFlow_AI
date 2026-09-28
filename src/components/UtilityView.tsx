@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { ActiveTab, Candidate } from '../types';
-import { Sidebar } from './Sidebar';
 import { Footer } from './Footer';
 import { exportCSV, exportJSON, extractOcrDocument, OcrResult } from '../services/api';
 
@@ -93,9 +92,7 @@ export const UtilityView: React.FC<UtilityViewProps> = ({ candidates, setActiveT
 
   return (
     <div className="flex flex-col min-h-screen bg-[#faf8ff] pt-[72px]">
-      <Sidebar activeTab="utility" setActiveTab={setActiveTab} />
-
-      <main className="flex-1 md:ml-64 p-4 md:p-8 overflow-y-auto custom-scrollbar">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 overflow-y-auto custom-scrollbar">
         <div className="max-w-[1440px] mx-auto text-left">
           {/* Header Section */}
           <div className="mb-8">
@@ -148,7 +145,7 @@ export const UtilityView: React.FC<UtilityViewProps> = ({ candidates, setActiveT
             {ocrLoading && (
               <div className="p-8 border-2 border-dashed border-[#004ac6]/30 rounded-xl bg-[#004ac6]/5 flex flex-col items-center justify-center text-center space-y-3">
                 <div className="w-12 h-12 rounded-full border-4 border-[#004ac6] border-t-transparent animate-spin" />
-                <p className="font-bold text-sm text-[#004ac6]">Extracting Document with Gemini Multimodal OCR...</p>
+                <p className="font-bold text-sm text-[#004ac6]">Extracting Document with Multimodal OCR...</p>
                 <p className="text-xs text-[#737686]">Scanning layout, columns, tables, headers, and contact details from {ocrFileName}</p>
               </div>
             )}
@@ -216,7 +213,7 @@ export const UtilityView: React.FC<UtilityViewProps> = ({ candidates, setActiveT
                   <span className="material-symbols-outlined text-[#004ac6] text-2xl">download</span>
                 </div>
                 <p className="text-[#434655] text-xs md:text-sm mb-6 leading-relaxed">
-                  Export all {candidates.length} candidate evaluations with Gemini match scores, OCR extraction transcripts, and hiring recommendations into standard formats.
+                  Export all {candidates.length} candidate evaluations with AI match scores, OCR extraction transcripts, and hiring recommendations into standard formats.
                 </p>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
@@ -312,7 +309,7 @@ export const UtilityView: React.FC<UtilityViewProps> = ({ candidates, setActiveT
               </div>
               <div>
                 <p className="text-xs font-bold text-[#737686] uppercase tracking-wider">OCR Technique</p>
-                <p className="font-headline-sm text-sm md:text-base font-bold text-[#191b23]">Gemini Multimodal OCR</p>
+                <p className="font-headline-sm text-sm md:text-base font-bold text-[#191b23]">Multimodal Neural OCR</p>
               </div>
             </div>
 
@@ -322,7 +319,7 @@ export const UtilityView: React.FC<UtilityViewProps> = ({ candidates, setActiveT
               </div>
               <div>
                 <p className="text-xs font-bold text-[#737686] uppercase tracking-wider">Engine Model</p>
-                <p className="font-headline-sm text-sm md:text-base font-bold text-[#191b23]">Gemini 3.7 Flash</p>
+                <p className="font-headline-sm text-sm md:text-base font-bold text-[#191b23]">Deep Neural Matcher</p>
               </div>
             </div>
 
@@ -349,7 +346,7 @@ export const UtilityView: React.FC<UtilityViewProps> = ({ candidates, setActiveT
         </div>
       </main>
 
-      <Footer hasSidebar={true} />
+      <Footer />
     </div>
   );
 };

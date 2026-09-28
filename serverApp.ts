@@ -185,7 +185,7 @@ Rules:
         if (extractedText && extractedText.length > 20) {
           return {
             text: extractedText,
-            method: resolvedMime.startsWith("image/") ? "Gemini Vision OCR (Image)" : "Gemini Multimodal OCR (PDF)",
+            method: resolvedMime.startsWith("image/") ? "Neural Vision OCR (Image)" : "Multimodal Neural OCR (PDF)",
             wordCount: extractedText.split(/\s+/).filter(Boolean).length,
           };
         }
@@ -226,8 +226,8 @@ app.get("/api/health", (_req, res) => {
   res.json({
     status: "ok",
     service: "ResumeFlow AI Screening & OCR Agent API",
-    ocrEngine: "Gemini 3.7 Flash Multimodal OCR + Mammoth + PDF Parser",
-    models: ["gemini-3.7-flash"],
+    ocrEngine: "Multimodal Neural OCR + Document Structure Parser",
+    models: ["Deep Neural Matcher"],
   });
 });
 
@@ -705,7 +705,7 @@ app.post("/api/export/csv", (req, res) => {
       c.scores?.educationMatch || 80,
       c.scores?.projectMatch || 80,
       `"${(c.recommendation || "Recommended").replace(/"/g, '""')}"`,
-      `"${(c.ocrMethod || "Gemini Multimodal OCR").replace(/"/g, '""')}"`,
+      `"${(c.ocrMethod || "Multimodal Neural OCR").replace(/"/g, '""')}"`,
     ]);
 
     const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");

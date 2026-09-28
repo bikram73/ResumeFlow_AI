@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { ActiveTab, Candidate, JobDescription } from '../types';
-import { Sidebar } from './Sidebar';
 import { Footer } from './Footer';
 import { sampleResumesBatch, initialJobDescription } from '../data';
 import { parseJobDescription } from '../services/api';
@@ -95,7 +94,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             setJdInputText(parsed.rawText || '');
           }
           setIsParsingJd(false);
-          setStatusMessage(`✓ Document OCR extracted & parsed from ${file.name} (${parsed.extractionMethod || 'Gemini OCR'})`);
+          setStatusMessage(`✓ Document OCR extracted & parsed from ${file.name} (${parsed.extractionMethod || 'AI OCR'})`);
           setTimeout(() => setStatusMessage(''), 5000);
         };
         reader.readAsDataURL(file);
@@ -185,9 +184,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   return (
     <div className="flex flex-col min-h-screen bg-[#faf8ff] pt-[72px]">
-      <Sidebar activeTab="dashboard" setActiveTab={setActiveTab} onNewAnalysis={handleStartAnalysis} />
-
-      <main className="flex-1 md:ml-64 p-4 md:p-8 overflow-y-auto custom-scrollbar">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 overflow-y-auto custom-scrollbar">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 text-left">
           <div>
@@ -319,7 +316,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   {isParsingJd ? (
                     <div className="flex flex-col items-center justify-center space-y-2">
                       <div className="w-8 h-8 border-3 border-[#004ac6] border-t-transparent rounded-full animate-spin" />
-                      <p className="font-bold text-xs text-[#004ac6]">Extracting Document with Gemini OCR & Structure Parser...</p>
+                      <p className="font-bold text-xs text-[#004ac6]">Extracting Document with Neural OCR & Structure Parser...</p>
                       <p className="text-[10px] text-[#737686]">Parsing technical skills, qualifications, and role criteria</p>
                     </div>
                   ) : (
@@ -477,7 +474,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
                 <div className="flex items-center gap-2 font-semibold text-[#004ac6]">
                   <span className="material-symbols-outlined text-sm">check_circle</span>
-                  <span>Gemini Entity & Skill Extraction</span>
+                  <span>Neural Entity & Skill Extraction</span>
                 </div>
                 <div className={`flex items-center gap-2 font-semibold ${screeningProgress >= 70 ? 'text-[#004ac6]' : 'text-[#434655] opacity-50'}`}>
                   <span className="material-symbols-outlined text-sm">
@@ -613,7 +610,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </main>
 
-      <Footer hasSidebar={true} />
+      <Footer />
     </div>
   );
 };

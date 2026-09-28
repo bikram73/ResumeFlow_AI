@@ -283,7 +283,7 @@ export const CandidateDrawer: React.FC<CandidateDrawerProps> = ({
                     <span>OCR Extracted Text & Layout</span>
                   </h3>
                   <p className="text-xs text-[#737686]">
-                    Method: {candidate.ocrMethod || 'Gemini Multimodal OCR Engine'}
+                    Method: {candidate.ocrMethod || 'Neural Multimodal OCR Engine'}
                   </p>
                 </div>
                 <button
