@@ -65,15 +65,6 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
           </div>
 
           <div className="flex items-center gap-3">
-            <a
-              href="https://github.com/bikram73/ResumeFlow_AI/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden lg:flex items-center gap-1.5 bg-[#191b23] text-white hover:bg-black px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[16px]">code</span>
-              <span>GitHub</span>
-            </a>
             <button
               onClick={() => setActiveTab(activeTab === 'landing' ? 'dashboard' : 'landing')}
               className="bg-[#004ac6] text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm hover:bg-[#1d4ed8] active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
