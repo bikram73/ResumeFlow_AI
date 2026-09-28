@@ -166,9 +166,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
             {/* Feature 4 */}
             <div className="md:col-span-2 bg-[#f3f3fe] rounded-3xl p-8 border border-[#c3c6d7]/20 flex items-center justify-between gap-6 text-left">
               <div className="flex-1">
-                <h3 className="font-headline-md text-xl font-bold mb-2">One-Click Export</h3>
+                <h3 className="font-headline-md text-xl font-bold mb-2">One-Click Export & Persistence</h3>
                 <p className="text-[#434655] text-sm leading-relaxed">
-                  Send your shortlist directly to Greenhouse, Lever, or export as a beautifully formatted CSV/PDF report.
+                  Export structured rankings as CSV or JSON reports. Browser-local persistence keeps your screened talent pool secure across sessions.
                 </p>
               </div>
               <div className="hidden md:flex gap-3">
@@ -176,7 +176,71 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
                   <span className="material-symbols-outlined">download</span>
                 </div>
                 <div className="w-12 h-12 glass-panel rounded-full flex items-center justify-center text-[#004ac6] shadow-sm">
-                  <span className="material-symbols-outlined">share</span>
+                  <span className="material-symbols-outlined">storage</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* New Detailed Architecture & Methodology Card */}
+          <div className="mt-12 bg-gradient-to-r from-[#004ac6]/10 via-[#712ae2]/10 to-[#004ac6]/10 rounded-3xl p-8 md:p-10 border border-[#004ac6]/20 text-left">
+            <div className="flex flex-col md:flex-row gap-8 items-center">
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-2 bg-[#004ac6] text-white px-3 py-1 rounded-full text-xs font-bold mb-4">
+                  <span className="material-symbols-outlined text-[14px]">bolt</span>
+                  Advanced Recruitment Intelligence
+                </div>
+                <h3 className="font-headline-lg text-2xl font-bold mb-3 text-[#191b23]">
+                  Multi-Role Re-Screening & Weighted Formula
+                </h3>
+                <p className="text-[#434655] text-sm md:text-base leading-relaxed mb-6">
+                  Test the exact same candidate resume against different Job Descriptions (JDs) simultaneously. ResumeFlow AI dynamically recalibrates match scores, identifies role-specific missing skills, and generates customized evaluation summaries.
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  <div className="bg-white/80 p-3 rounded-xl border border-[#c3c6d7]/40">
+                    <div className="text-xs font-semibold text-[#737686]">Skill Match</div>
+                    <div className="text-lg font-bold text-[#004ac6]">40% Weight</div>
+                  </div>
+                  <div className="bg-white/80 p-3 rounded-xl border border-[#c3c6d7]/40">
+                    <div className="text-xs font-semibold text-[#737686]">Experience</div>
+                    <div className="text-lg font-bold text-[#004ac6]">25% Weight</div>
+                  </div>
+                  <div className="bg-white/80 p-3 rounded-xl border border-[#c3c6d7]/40">
+                    <div className="text-xs font-semibold text-[#737686]">Projects</div>
+                    <div className="text-lg font-bold text-[#004ac6]">15% Weight</div>
+                  </div>
+                  <div className="bg-white/80 p-3 rounded-xl border border-[#c3c6d7]/40">
+                    <div className="text-xs font-semibold text-[#737686]">Education</div>
+                    <div className="text-lg font-bold text-[#004ac6]">10% Weight</div>
+                  </div>
+                  <div className="bg-white/80 p-3 rounded-xl border border-[#c3c6d7]/40">
+                    <div className="text-xs font-semibold text-[#737686]">Certifications</div>
+                    <div className="text-lg font-bold text-[#004ac6]">5% Weight</div>
+                  </div>
+                  <div className="bg-white/80 p-3 rounded-xl border border-[#c3c6d7]/40">
+                    <div className="text-xs font-semibold text-[#737686]">Soft Skills</div>
+                    <div className="text-lg font-bold text-[#004ac6]">5% Weight</div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full md:w-80 bg-white p-6 rounded-2xl shadow-lg border border-[#c3c6d7]/30 flex flex-col gap-3">
+                <div className="font-bold text-sm text-[#191b23] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#004ac6]">verified</span>
+                  Supported Formats & Parsing
+                </div>
+                <div className="text-xs text-[#434655] space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#004ac6]"></span>
+                    <span>PDF, DOCX, TXT, and Markdown</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#712ae2]"></span>
+                    <span>Scanned Resumes (PNG, JPG, WebP) via OCR</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#943700]"></span>
+                    <span>Batch processing up to 25+ resumes</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -269,19 +333,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
         </div>
       </section>
 
-      {/* Tech Stack Section */}
-      <section className="py-16 bg-[#e1e2ed]/30">
-        <div className="max-w-[1440px] mx-auto px-6 text-center">
-          <p className="text-xs text-[#737686] uppercase tracking-widest font-bold mb-8">Built with the World's Most Powerful Tech</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-75">
-            <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#004ac6]">code</span> React</span>
-            <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#712ae2]">flash_on</span> Node.js</span>
-            <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#943700]">diamond</span> Neural AI</span>
-            <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#004ac6]">storage</span> PostgreSQL</span>
-            <span className="font-bold text-base md:text-lg flex items-center gap-2"><span className="material-symbols-outlined text-[#712ae2]">cloud</span> Cloud Engine</span>
-          </div>
-        </div>
-      </section>
+
 
       {/* Final CTA */}
       <section className="py-20 bg-[#191b23] text-white relative overflow-hidden">
