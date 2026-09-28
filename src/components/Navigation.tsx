@@ -14,10 +14,17 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
         <div className="flex items-center gap-6">
           <button 
             onClick={() => setActiveTab('landing')}
-            className="flex items-center gap-2 text-left focus:outline-none"
+            className="flex items-center gap-2.5 text-left focus:outline-none group cursor-pointer"
           >
-            <span className="font-display-lg text-xl md:text-2xl font-bold text-[#004ac6] tracking-tight">
-              ResumeFlow AI
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#004ac6] via-[#1d4ed8] to-[#3b82f6] flex items-center justify-center text-white shadow-md shadow-[#004ac6]/25 transition-transform duration-200 group-hover:scale-105">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <path d="M9 13l2 2 4-4" />
+              </svg>
+            </div>
+            <span className="font-display-lg text-xl md:text-2xl font-bold text-[#004ac6] tracking-tight flex items-center gap-1.5">
+              ResumeFlow <span className="text-xs bg-[#2563eb]/10 text-[#004ac6] px-1.5 py-0.5 rounded-md font-semibold tracking-normal border border-[#004ac6]/20">AI</span>
             </span>
           </button>
 
