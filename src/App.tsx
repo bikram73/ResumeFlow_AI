@@ -212,7 +212,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8ff] text-[#191b23] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#faf8ff] text-[#191b23] flex flex-col font-sans pb-16 md:pb-0">
       <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {activeTab === 'landing' && (
