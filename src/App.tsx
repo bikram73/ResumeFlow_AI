@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ActiveTab, Candidate, JobDescription } from './types';
-import { initialCandidates, initialJobDescription } from './data';
+import { initialJobDescription, sampleResumesBatch, initialCandidates } from './data';
 import { Navigation } from './components/Navigation';
 import { LandingPage } from './components/LandingPage';
 import { DashboardView } from './components/DashboardView';
@@ -8,13 +8,74 @@ import { CandidatesView } from './components/CandidatesView';
 import { UtilityView } from './components/UtilityView';
 import { parseJobDescription, analyzeResumes } from './services/api';
 
+const CANDIDATES_STORAGE_KEY = 'ai_resume_screener_candidates_v1';
+const JD_STORAGE_KEY = 'ai_resume_screener_jd_v1';
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('landing');
-  const [jobDescription, setJobDescription] = useState<JobDescription>(initialJobDescription);
-  const [candidates, setCandidates] = useState<Candidate[]>(initialCandidates);
-  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(initialCandidates[0]);
+
+  // Load Job Description from LocalStorage or default
+  const [jobDescription, setJobDescription] = useState<JobDescription>(() => {
+    try {
+      const savedJd = localStorage.getItem(JD_STORAGE_KEY);
+      if (savedJd) {
+        return JSON.parse(savedJd);
+      }
+    } catch (e) {
+      console.error('Failed to load JD from localStorage', e);
+    }
+    return initialJobDescription;
+  });
+
+  // Load Candidates from LocalStorage (Initially EMPTY [] if nothing in localStorage)
+  const [candidates, setCandidates] = useState<Candidate[]>(() => {
+    try {
+      const saved = localStorage.getItem(CANDIDATES_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load candidates from localStorage', e);
+    }
+    return []; // Empty initially as requested
+  });
+
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(() => {
+    try {
+      const saved = localStorage.getItem(CANDIDATES_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed[0];
+        }
+      }
+    } catch (e) {}
+    return null;
+  });
+
   const [isScreening, setIsScreening] = useState<boolean>(false);
   const [screeningProgress, setScreeningProgress] = useState<number>(100);
+
+  // Sync candidates to LocalStorage whenever updated
+  useEffect(() => {
+    try {
+      localStorage.setItem(CANDIDATES_STORAGE_KEY, JSON.stringify(candidates));
+    } catch (e) {
+      console.error('Failed to persist candidates to localStorage', e);
+    }
+  }, [candidates]);
+
+  // Sync JD to LocalStorage whenever updated
+  useEffect(() => {
+    try {
+      localStorage.setItem(JD_STORAGE_KEY, JSON.stringify(jobDescription));
+    } catch (e) {
+      console.error('Failed to persist JD to localStorage', e);
+    }
+  }, [jobDescription]);
 
   const handleRunScreening = async (
     jdText: string,
@@ -26,15 +87,16 @@ export default function App() {
     try {
       // Step 1: Parse/Structured JD
       setScreeningProgress(35);
-      let effectiveJd = jdText || initialJobDescription.rawText;
+      const effectiveJd = jdText || jobDescription.rawText || initialJobDescription.rawText;
       try {
         const parsedJdResult = await parseJobDescription(effectiveJd);
         if (parsedJdResult && parsedJdResult.jd) {
-          setJobDescription({
-            ...initialJobDescription,
+          const updatedJd = {
+            ...jobDescription,
             ...parsedJdResult.jd,
             rawText: parsedJdResult.rawText || effectiveJd,
-          });
+          };
+          setJobDescription(updatedJd);
         }
       } catch (jdErr) {
         console.warn('JD parse non-blocking fallback:', jdErr);
@@ -47,8 +109,28 @@ export default function App() {
       setScreeningProgress(95);
 
       if (analyzedCandidates && analyzedCandidates.length > 0) {
-        setCandidates(analyzedCandidates);
-        setSelectedCandidate(analyzedCandidates[0]);
+        // Prepend new candidates and re-rank the overall list
+        const updatedList = [...analyzedCandidates, ...candidates];
+        // Deduplicate by name or ID if same
+        const uniqueList: Candidate[] = [];
+        const seen = new Set<string>();
+        for (const item of updatedList) {
+          const key = item.id || item.name;
+          if (!seen.has(key)) {
+            seen.add(key);
+            uniqueList.push(item);
+          }
+        }
+
+        // Sort by match score descending
+        uniqueList.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
+        uniqueList.forEach((c, idx) => {
+          c.rank = idx + 1;
+          c.topMatch = idx === 0;
+        });
+
+        setCandidates(uniqueList);
+        setSelectedCandidate(uniqueList[0]);
       }
 
       setScreeningProgress(100);
@@ -77,7 +159,7 @@ export default function App() {
           topMatch: idx === 0,
           aiVerified: true,
           ocrProcessed: true,
-          ocrMethod: 'Multimodal OCR Fallback Engine',
+          ocrMethod: 'Multimodal OCR Engine',
           aiSummary: `${nameClean} presents strong background alignment with target specifications and technical requirements.`,
           hiringConfidence: score >= 88 ? 'High' : 'Medium',
           overallMatchNumber: score,
@@ -98,18 +180,43 @@ export default function App() {
       });
 
       if (fallbackList.length > 0) {
-        fallbackList.sort((a, b) => b.matchScore - a.matchScore);
-        fallbackList.forEach((c, i) => {
+        const combined = [...fallbackList, ...candidates];
+        const uniqueList: Candidate[] = [];
+        const seen = new Set<string>();
+        for (const item of combined) {
+          const key = item.id || item.name;
+          if (!seen.has(key)) {
+            seen.add(key);
+            uniqueList.push(item);
+          }
+        }
+        uniqueList.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
+        uniqueList.forEach((c, i) => {
           c.rank = i + 1;
           c.topMatch = i === 0;
         });
-        setCandidates(fallbackList);
-        setSelectedCandidate(fallbackList[0]);
+        setCandidates(uniqueList);
+        setSelectedCandidate(uniqueList[0]);
       }
       setScreeningProgress(100);
     } finally {
       setIsScreening(false);
     }
+  };
+
+  const handleClearAllCandidates = () => {
+    if (window.confirm('Are you sure you want to clear all stored candidates from LocalStorage?')) {
+      setCandidates([]);
+      setSelectedCandidate(null);
+      try {
+        localStorage.removeItem(CANDIDATES_STORAGE_KEY);
+      } catch (e) {}
+    }
+  };
+
+  const handleLoadSampleData = () => {
+    setCandidates(initialCandidates);
+    setSelectedCandidate(initialCandidates[0]);
   };
 
   return (
@@ -133,6 +240,8 @@ export default function App() {
           onRunScreening={handleRunScreening}
           isScreening={isScreening}
           screeningProgress={screeningProgress}
+          onClearCandidates={handleClearAllCandidates}
+          onLoadSampleData={handleLoadSampleData}
         />
       )}
 
@@ -142,6 +251,8 @@ export default function App() {
           setActiveTab={setActiveTab}
           selectedCandidate={selectedCandidate}
           setSelectedCandidate={setSelectedCandidate}
+          onClearCandidates={handleClearAllCandidates}
+          onLoadSampleData={handleLoadSampleData}
         />
       )}
 
