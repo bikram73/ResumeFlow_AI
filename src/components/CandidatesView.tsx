@@ -354,7 +354,10 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
                           <div>
                             <p className="font-bold text-[#191b23]">{cand.name}</p>
                             <p className="text-xs text-[#434655]">
-                              {cand.role} @ {cand.company}
+                              Role: {cand.role}
+                            </p>
+                            <p className="text-[11px] text-[#004ac6] font-semibold mt-0.5">
+                              🎯 Target Role: {cand.targetRole || 'Screened Role'}
                             </p>
                           </div>
                         </div>

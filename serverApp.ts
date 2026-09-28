@@ -507,6 +507,7 @@ Return a strict JSON object with this schema:
                 email: parsed.email || "candidate@talentpool.io",
                 phone: parsed.phone || "+1 (555) 012-3456",
                 role: parsed.role || "Specialist",
+                targetRole: parsed.targetRole || (jdText ? jdText.split("\n")[0].trim().replace(/^#+\s*/, "") : "Target Role"),
                 company: parsed.company || "Leading Organization",
                 location: parsed.location || "San Francisco, CA",
                 matchScore: overall,
@@ -654,7 +655,7 @@ Return a strict JSON object with this schema:
 
         // Extract first line of JD for specific title match
         const jdFirstLine = (jdText || "").split("\n")[0].trim().replace(/^#+\s*/, "");
-        const targetJdTitle = jdFirstLine.length > 3 && jdFirstLine.length < 70 ? jdFirstLine : "Target Role";
+        const targetJdTitle = jdFirstLine.length > 3 && jdFirstLine.length < 70 ? jdFirstLine : (jdText ? jdText.substring(0, 40) : "Target Role");
 
         const recommendation = computedOverall >= 88
           ? "Strongly Recommended"
@@ -671,6 +672,7 @@ Return a strict JSON object with this schema:
           email,
           phone,
           role: candidateRole,
+          targetRole: targetJdTitle,
           company: "Candidate File: " + (item.fileName || "Applicant"),
           location: "San Francisco, CA (Remote)",
           matchScore: computedOverall,

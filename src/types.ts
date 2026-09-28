@@ -17,6 +17,7 @@ export interface Candidate {
   email?: string;
   phone?: string;
   role: string;
+  targetRole?: string;
   company: string;
   location: string;
   matchScore: number;
