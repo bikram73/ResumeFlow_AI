@@ -419,10 +419,11 @@ app.post("/api/analyze-resumes", async (req, res) => {
         if (ai) {
           try {
             const prompt = `You are an expert AI Resume Screening and Talent Acquisition Agent.
-Analyze this Candidate Resume against the target Job Description.
+Strictly evaluate this Candidate Resume against the specific Target Job Description provided below.
+CRITICAL: Score calibration must strictly reflect alignment with this specific Job Description. If the candidate's background/skills do NOT match the role (e.g. a UI designer evaluated for an ML or DevOps role), the skillMatch and overallScore MUST be appropriately low (e.g. 35-65%), and missingSkills must accurately list the JD's key requirements.
 
 Target Job Description:
-${(jdText || "General Engineering / Tech / Product Role").substring(0, 7000)}
+${(jdText || "General Technical / Professional Role").substring(0, 7000)}
 
 Candidate Resume Document: ${fileNameClean} (Extracted via ${ocrMethod})
 ${candidateText.substring(0, 12000)}
@@ -435,8 +436,8 @@ Return a strict JSON object with this schema:
   "name": "Candidate Full Name inferred accurately from resume or document",
   "email": "Email address if found or contact@example.com",
   "phone": "Phone if found or +1 (555) 019-2834",
-  "role": "Current or Target Job Title",
-  "company": "Most recent company or employer",
+  "role": "Current or Candidate Title",
+  "company": "Most recent employer or project",
   "location": "City, Country or Remote",
   "scores": {
     "skillMatch": 0-100,
@@ -450,14 +451,14 @@ Return a strict JSON object with this schema:
   "recommendation": "Strongly Recommended | Recommended | Consider | Moderate Match",
   "skills": ["Skill1", "Skill2", "Skill3", "Skill4", "Skill5"],
   "missingSkills": ["MissingSkill1", "MissingSkill2"],
-  "strengths": ["Strength 1 with detail", "Strength 2 with detail"],
-  "growthAreas": ["Growth Area 1", "Growth Area 2"],
-  "aiSummary": "2-3 sentence executive evaluation explaining why candidate received this score and their key fit for the role",
+  "strengths": ["Strength 1 specifically relating to JD", "Strength 2"],
+  "growthAreas": ["Specific skill or experience gap for this JD"],
+  "aiSummary": "2-3 sentence executive evaluation detailing how well this candidate fits THIS specific Job Description",
   "experience": "e.g. 6 Years (Senior)",
   "education": "e.g. BS Computer Science / Relevant Degree",
   "timeline": [
-    { "period": "2021 - Present", "role": "Senior Engineer", "company": "Company A" },
-    { "period": "2018 - 2021", "role": "Software Engineer", "company": "Company B" }
+    { "period": "2021 - Present", "role": "Role Title", "company": "Company A" },
+    { "period": "2018 - 2021", "role": "Role Title", "company": "Company B" }
   ]
 }`;
 
@@ -562,28 +563,71 @@ Return a strict JSON object with this schema:
         const phoneMatch = candidateText.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/);
         const phone = phoneMatch ? phoneMatch[0] : `+1 (555) 01${index + 2}-8${index}34`;
 
-        // Extract skills present in resume
-        const techSkillsCatalog = [
-          "React", "TypeScript", "JavaScript", "Node.js", "Python", "Golang", "Java", "C++",
-          "AWS", "GCP", "Azure", "Docker", "Kubernetes", "SQL", "PostgreSQL", "MongoDB", "Redis",
-          "GraphQL", "REST", "Tailwind CSS", "Next.js", "Figma", "UI/UX", "System Architecture",
-          "Microservices", "CI/CD", "Agile", "Scrum", "Leadership", "Performance Optimization"
+        // Multi-domain technical and design skills catalog
+        const domainSkillsCatalog = [
+          // Frontend & Fullstack
+          "React", "TypeScript", "JavaScript", "Node.js", "Python", "Golang", "Java", "C++", "FastAPI",
+          "Next.js", "GraphQL", "REST", "Tailwind CSS", "HTML", "CSS", "Microservices",
+          // AI, Machine Learning & NLP
+          "PyTorch", "TensorFlow", "Hugging Face", "Transformers", "LLM", "RAG", "CUDA", "MLOps", "LangChain", "Fine-Tuning", "vLLM", "Vector DBs",
+          // Cloud, DevOps & Infrastructure
+          "AWS", "GCP", "Azure", "Docker", "Kubernetes", "Terraform", "CI/CD", "Linux", "Helm", "Prometheus", "Grafana", "ArgoCD", "SRE",
+          // Databases & Storage
+          "PostgreSQL", "MongoDB", "Redis", "SQL", "Pinecone", "Chroma",
+          // Design & UX
+          "Figma", "Design Systems", "UI/UX", "Prototyping", "Wireframing", "HCI", "Design Tokens", "User Research",
+          // Product & Management
+          "Product Strategy", "Technical Roadmapping", "PRD", "Agile", "Scrum", "User Stories", "B2B SaaS", "GTM Strategy", "Analytics",
+          // Cybersecurity & DevSecOps
+          "Cybersecurity", "DevSecOps", "Cloud Security", "SIEM", "SOC", "Zero Trust", "IAM", "Penetration Testing", "Snyk", "SonarQube", "CISSP"
         ];
-        const matchedSkills = techSkillsCatalog.filter(s => lowerCandidate.includes(s.toLowerCase()));
-        const finalCandidateSkills = matchedSkills.length > 0
-          ? matchedSkills.slice(0, 6)
-          : ["React", "TypeScript", "System Architecture", "Problem Solving", "CI/CD"];
 
-        // Check JD skill overlap
-        const jdRequired = techSkillsCatalog.filter(s => lowerJd.includes(s.toLowerCase()));
-        const missingSkills = jdRequired.filter(s => !matchedSkills.some(ms => ms.toLowerCase() === s.toLowerCase()));
+        // Skills found in the candidate resume
+        const matchedCandidateSkills = domainSkillsCatalog.filter(s => lowerCandidate.includes(s.toLowerCase()));
+        const finalCandidateSkills = matchedCandidateSkills.length > 0
+          ? matchedCandidateSkills.slice(0, 6)
+          : ["System Architecture", "Software Engineering", "Problem Solving", "CI/CD"];
 
-        const skillMatchScore = Math.min(98, Math.max(72, 75 + matchedSkills.length * 3 - missingSkills.length * 2));
-        const expScore = lowerCandidate.includes("senior") || lowerCandidate.includes("lead") || lowerCandidate.includes("architect") ? 92 : 84;
-        const projScore = lowerCandidate.includes("project") || lowerCandidate.includes("architecture") || lowerCandidate.includes("designed") ? 88 : 82;
-        const eduScore = lowerCandidate.includes("master") ? 95 : lowerCandidate.includes("bachelor") || lowerCandidate.includes("degree") ? 90 : 85;
-        const certScore = lowerCandidate.includes("certified") || lowerCandidate.includes("aws") || lowerCandidate.includes("gcp") ? 90 : 80;
-        const softScore = 88;
+        // Skills required by this specific JD
+        const jdRequired = domainSkillsCatalog.filter(s => lowerJd.includes(s.toLowerCase()));
+        
+        // Exact overlap between candidate skills and JD requirements
+        const overlappingSkills = jdRequired.filter(s => matchedCandidateSkills.some(ms => ms.toLowerCase() === s.toLowerCase()));
+        const missingSkills = jdRequired.filter(s => !matchedCandidateSkills.some(ms => ms.toLowerCase() === s.toLowerCase()));
+
+        // Calculate JD Match percentage based on actual requirement overlap
+        let skillMatchScore = 80;
+        if (jdRequired.length > 0) {
+          const overlapRatio = overlappingSkills.length / jdRequired.length;
+          // Scale skill match between 35% (zero overlap) and 98% (full overlap)
+          skillMatchScore = Math.min(98, Math.max(35, Math.round(35 + (overlapRatio * 63))));
+        } else {
+          skillMatchScore = Math.min(95, Math.max(70, 70 + matchedCandidateSkills.length * 4));
+        }
+
+        const expScore = lowerCandidate.includes("staff") || lowerCandidate.includes("principal") || lowerCandidate.includes("lead")
+          ? 94
+          : lowerCandidate.includes("senior") || lowerCandidate.includes("architect")
+          ? 90
+          : 80;
+        
+        const projScore = lowerCandidate.includes("enterprise") || lowerCandidate.includes("architecture") || lowerCandidate.includes("scale")
+          ? 90
+          : 82;
+        
+        const eduScore = lowerCandidate.includes("ph.d") || lowerCandidate.includes("phd")
+          ? 98
+          : lowerCandidate.includes("master")
+          ? 94
+          : lowerCandidate.includes("bachelor") || lowerCandidate.includes("degree")
+          ? 88
+          : 82;
+
+        const certScore = lowerCandidate.includes("certified") || lowerCandidate.includes("aws") || lowerCandidate.includes("cissp")
+          ? 90
+          : 78;
+
+        const softScore = 86;
 
         // PRD Formula: (Skill Match 40% + Experience 25% + Projects 15% + Education 10% + Certs 5% + Soft Skills 5%)
         const computedOverall = Math.round(
@@ -595,17 +639,30 @@ Return a strict JSON object with this schema:
           softScore * 0.05
         );
 
-        const candidateRole = lowerCandidate.includes("architect")
-          ? "Lead Frontend Architect"
-          : lowerCandidate.includes("senior")
-          ? "Senior Software Engineer"
-          : "Senior Full-Stack Developer";
+        // Infer candidate role
+        const candidateRole = lowerCandidate.includes("designer")
+          ? "Staff Product Designer"
+          : lowerCandidate.includes("machine learning") || lowerCandidate.includes("nlp") || lowerCandidate.includes("pytorch")
+          ? "Senior ML & NLP Engineer"
+          : lowerCandidate.includes("devops") || lowerCandidate.includes("infrastructure") || lowerCandidate.includes("terraform")
+          ? "Cloud Infrastructure Architect"
+          : lowerCandidate.includes("product manager")
+          ? "Senior Technical Product Manager"
+          : lowerCandidate.includes("security")
+          ? "Senior Cybersecurity Engineer"
+          : "Senior Software Engineer";
 
-        const candidateCompany = lowerCandidate.includes("technologies")
-          ? "Global Technologies"
-          : lowerCandidate.includes("systems")
-          ? "NextGen Systems"
-          : "Enterprise Solutions";
+        // Extract first line of JD for specific title match
+        const jdFirstLine = (jdText || "").split("\n")[0].trim().replace(/^#+\s*/, "");
+        const targetJdTitle = jdFirstLine.length > 3 && jdFirstLine.length < 70 ? jdFirstLine : "Target Role";
+
+        const recommendation = computedOverall >= 88
+          ? "Strongly Recommended"
+          : computedOverall >= 78
+          ? "Recommended"
+          : computedOverall >= 65
+          ? "Consider"
+          : "Moderate Match";
 
         return {
           id: `c_${Date.now()}_${index}`,
@@ -614,22 +671,22 @@ Return a strict JSON object with this schema:
           email,
           phone,
           role: candidateRole,
-          company: candidateCompany,
+          company: "Candidate File: " + (item.fileName || "Applicant"),
           location: "San Francisco, CA (Remote)",
           matchScore: computedOverall,
           skills: finalCandidateSkills,
-          missingSkills: missingSkills.length > 0 ? missingSkills.slice(0, 3) : ["Kubernetes Cluster Ops"],
-          experience: expScore >= 90 ? "7+ Years (Senior)" : "5+ Years",
-          education: eduScore >= 95 ? "Master's in Computer Science" : "Bachelor's in Computer Science",
-          status: computedOverall >= 90 ? "Shortlisted" : "Screened",
+          missingSkills: missingSkills.length > 0 ? missingSkills.slice(0, 4) : ["Specific Domain Tooling"],
+          experience: expScore >= 90 ? "6+ Years (Senior)" : "4+ Years",
+          education: eduScore >= 94 ? "Master's Degree" : "Bachelor's Degree",
+          status: computedOverall >= 88 ? "Shortlisted" : "Screened",
           avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(fileNameClean)}`,
           topMatch: false,
           aiVerified: true,
           ocrProcessed: true,
           ocrMethod,
           extractedText: candidateText.substring(0, 1500),
-          aiSummary: `${fileNameClean} demonstrates solid technical qualifications with ${finalCandidateSkills.slice(0, 3).join(", ")} expertise and a strong project portfolio. Scored ${computedOverall}% overall role alignment.`,
-          hiringConfidence: computedOverall >= 88 ? "High" : "Medium",
+          aiSummary: `${fileNameClean} evaluated against ${targetJdTitle}. Achieved ${computedOverall}% overall alignment with ${overlappingSkills.length} of ${jdRequired.length || 5} core requirements matched.`,
+          hiringConfidence: computedOverall >= 88 ? "High" : computedOverall >= 75 ? "Medium" : "Low",
           overallMatchNumber: computedOverall,
           scores: {
             skillMatch: skillMatchScore,
@@ -640,17 +697,17 @@ Return a strict JSON object with this schema:
             softSkillsMatch: softScore,
             overallScore: computedOverall,
           },
-          recommendation: computedOverall >= 90 ? "Strongly Recommended" : computedOverall >= 82 ? "Recommended" : "Consider",
+          recommendation,
           timeline: [
-            { period: "2021 — Present", role: candidateRole, company: candidateCompany },
-            { period: "2018 — 2021", role: "Software Engineer", company: "Tech Ventures" }
+            { period: "2021 — Present", role: candidateRole, company: "Tech Enterprises" },
+            { period: "2018 — 2021", role: "Software Specialist", company: "NextGen Labs" }
           ],
-          strengths: [
-            `Strong proficiency in ${finalCandidateSkills[0] || "Frontend"} and modular architecture`,
-            "Proven ability to deliver high-impact technical features",
-            "Clean code standards and collaborative engineering approach"
-          ],
-          growthAreas: missingSkills.length > 0 ? missingSkills.slice(0, 2) : ["Distributed cloud architectures"],
+          strengths: overlappingSkills.length > 0
+            ? [`Strong alignment with ${overlappingSkills.slice(0, 2).join(" & ")}`, "Solid project depth and proven tenure"]
+            : ["General problem solving and domain foundation", "Adaptable engineering methodology"],
+          growthAreas: missingSkills.length > 0
+            ? missingSkills.slice(0, 3).map(ms => `Requires hands-on experience in ${ms}`)
+            : ["Specialized advanced tooling"],
         };
       })
     );

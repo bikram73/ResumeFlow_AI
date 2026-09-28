@@ -148,7 +148,41 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   };
 
   const handleStartAnalysis = async () => {
-    if (stagedFiles.length === 0) {
+    let payloadResumes: { fileName: string; fileType: string; base64?: string; text?: string }[] = [];
+
+    if (stagedFiles.length > 0) {
+      for (const item of stagedFiles) {
+        if (item.text) {
+          payloadResumes.push({
+            fileName: item.name,
+            fileType: item.type,
+            text: item.text,
+          });
+        } else if (item.file) {
+          const base64 = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const res = reader.result as string;
+              resolve(res.split(',')[1] || res);
+            };
+            reader.readAsDataURL(item.file!);
+          });
+          payloadResumes.push({
+            fileName: item.name,
+            fileType: item.type,
+            base64,
+          });
+        }
+      }
+    } else if (candidates.length > 0) {
+      // Re-evaluate existing loaded candidate resumes against the newly selected JD
+      payloadResumes = candidates.map((c) => ({
+        fileName: `${c.name}.pdf`,
+        fileType: 'application/pdf',
+        text: c.extractedText || `Candidate Name: ${c.name}\nRole: ${c.role}\nCompany: ${c.company}\nSkills: ${c.skills.join(', ')}\nExperience: ${c.experience}\nEducation: ${c.education || "Bachelor's"}\nSummary: ${c.aiSummary || ''}`,
+      }));
+      setStatusMessage(`🔄 Re-screening ${candidates.length} candidate(s) against "${jobDescription.title || 'Selected JD'}"...`);
+    } else {
       setStatusMessage('⚠️ Please upload at least one candidate resume file (.pdf, .docx, .txt) below to run AI screening.');
       resumeFileInputRef.current?.click();
       setTimeout(() => setStatusMessage(''), 5000);
@@ -158,32 +192,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     const currentJd = (jdInputText && jdInputText.trim().length > 0)
       ? jdInputText.trim()
       : (jobDescription.rawText || initialJobDescription.rawText);
-
-    const payloadResumes: { fileName: string; fileType: string; base64?: string; text?: string }[] = [];
-
-    for (const item of stagedFiles) {
-      if (item.text) {
-        payloadResumes.push({
-          fileName: item.name,
-          fileType: item.type,
-          text: item.text,
-        });
-      } else if (item.file) {
-        const base64 = await new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const res = reader.result as string;
-            resolve(res.split(',')[1] || res);
-          };
-          reader.readAsDataURL(item.file!);
-        });
-        payloadResumes.push({
-          fileName: item.name,
-          fileType: item.type,
-          base64,
-        });
-      }
-    }
 
     await onRunScreening(currentJd, payloadResumes);
   };
@@ -476,7 +484,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
               <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <p className="text-xs text-[#737686]">
-                  {stagedFiles.length > 0 ? `${stagedFiles.length} file(s) ready to screen` : 'Select resumes above or load sample batch to run'}
+                  {stagedFiles.length > 0
+                    ? `${stagedFiles.length} file(s) staged to screen against ${jobDescription.title || 'Selected JD'}`
+                    : candidates.length > 0
+                    ? `Ready to re-screen ${candidates.length} active resume(s) against "${jobDescription.title || 'Selected JD'}"`
+                    : 'Upload candidate resumes above or select a sample batch to run'}
                 </p>
                 <button
                   type="button"
@@ -487,7 +499,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <span className={`material-symbols-outlined text-lg ${isScreening ? 'animate-spin' : ''}`}>
                     {isScreening ? 'sync' : 'auto_awesome'}
                   </span>
-                  <span>{isScreening ? 'Analyzing Resumes...' : 'Run AI Screening & Rank'}</span>
+                  <span>
+                    {isScreening
+                      ? 'Analyzing Resumes...'
+                      : stagedFiles.length === 0 && candidates.length > 0
+                      ? 'Re-Screen Resumes with Current JD'
+                      : 'Run AI Screening & Rank'}
+                  </span>
                 </button>
               </div>
             </div>
