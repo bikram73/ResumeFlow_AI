@@ -60,5 +60,47 @@ export function runNlpTests() {
     if (!evalResult.missingRequiredSkills.includes('Kubernetes')) throw new Error('Kubernetes should be flagged as missing');
   });
 
+  test('Yields different scores, missing skills, and recommendations when same resume is evaluated for different roles', () => {
+    const designerResume = `
+      Alex Chen - Staff Product Designer
+      Experience: 8+ years designing design systems, Figma tokens, UI/UX architecture, user research, wireframing.
+      Skills: Figma, Design Systems, UI/UX, Prototyping, Design Tokens, HTML, CSS.
+      Education: Bachelor of Design & HCI.
+    `;
+
+    const designJd = `
+      Senior Product Designer & AI Systems Lead
+      Required Skills: Figma, Design Systems, UI/UX, Prototyping, HCI, Design Tokens.
+      Responsibilities: Lead design systems, token architecture, and UX frameworks.
+    `;
+
+    const mlJd = `
+      Senior Machine Learning & NLP Engineer
+      Required Skills: PyTorch, TensorFlow, NLP, LLM, Transformers, RAG, CUDA, Python.
+      Responsibilities: Build and fine-tune large language models and distributed ML pipelines.
+    `;
+
+    const evalForDesign = evaluateResumeAgainstJD(designerResume, designJd, 'Alex_Chen.pdf', ['Figma', 'Design Systems', 'UI/UX', 'Prototyping']);
+    const evalForML = evaluateResumeAgainstJD(designerResume, mlJd, 'Alex_Chen.pdf', ['PyTorch', 'TensorFlow', 'NLP', 'LLM', 'Transformers', 'CUDA']);
+
+    // The score for Design MUST be significantly higher than for ML
+    if (evalForDesign.scores.overallScore <= evalForML.scores.overallScore) {
+      throw new Error(`Design score (${evalForDesign.scores.overallScore}%) must be higher than ML score (${evalForML.scores.overallScore}%) for a Designer resume`);
+    }
+
+    if (evalForDesign.scores.overallScore < 85) {
+      throw new Error(`Expected >= 85% for matching design role, got ${evalForDesign.scores.overallScore}%`);
+    }
+
+    if (evalForML.scores.overallScore > 65) {
+      throw new Error(`Expected <= 65% for mismatched ML role, got ${evalForML.scores.overallScore}%`);
+    }
+
+    // Missing skills for ML should flag ML requirements (e.g. PyTorch, NLP, Transformers)
+    if (!evalForML.missingRequiredSkills.some(s => ['PyTorch', 'TensorFlow', 'NLP', 'LLM'].includes(s))) {
+      throw new Error('ML role evaluation should flag missing ML skills');
+    }
+  });
+
   return results;
 }

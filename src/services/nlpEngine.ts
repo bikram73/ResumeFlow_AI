@@ -97,6 +97,17 @@ export const SKILL_SYNONYMS: Record<string, string> = {
   'user experience': 'UI/UX',
   'user interface': 'UI/UX',
   'figma': 'Figma',
+  'prototyping': 'Prototyping',
+  'prototype': 'Prototyping',
+  'design tokens': 'Design Tokens',
+  'design token': 'Design Tokens',
+  'wireframing': 'Wireframing',
+  'wireframes': 'Wireframing',
+  'user research': 'User Research',
+  'hci': 'HCI',
+  'human-computer interaction': 'HCI',
+  'product design': 'Product Design',
+  'interaction design': 'UI/UX',
   'tailwind': 'Tailwind CSS',
   'tailwindcss': 'Tailwind CSS',
   'tailwind css': 'Tailwind CSS',
@@ -506,7 +517,8 @@ export function evaluateResumeAgainstJD(
 
   // Composite Skill Score combining Keyword Overlap + Semantic Embedding/Cosine Score
   const rawSkillOverlapScore = (reqMatchRatio * 80) + (prefMatchRatio * 20);
-  const compositeSkillScore = Math.min(100, Math.max(25, Math.round((rawSkillOverlapScore * 0.75) + (semanticScore * 0.25))));
+  const bonus = reqMatchRatio >= 0.75 ? 10 : 0;
+  const compositeSkillScore = Math.min(100, Math.max(25, Math.round((rawSkillOverlapScore * 0.75) + (semanticScore * 0.25) + bonus)));
 
   // 3. Factual Experience, Education, and Certification Analyzers
   const expDetails = extractExperienceDetails(resumeText);
@@ -514,11 +526,19 @@ export function evaluateResumeAgainstJD(
   const certDetails = extractCertifications(resumeText);
   const contactInfo = extractContactInformation(resumeText, fileName);
 
-  // 4. Project & Architecture Score (evaluated against semantic similarity and complexity indicators)
+  // Domain relevance factor: scales experience and project scores based on how relevant the candidate's domain is to the target role
+  const domainAlignmentFactor = reqMatchRatio >= 0.75
+    ? 1.0
+    : Math.min(1.0, Math.max(0.35, (reqMatchRatio * 0.7) + (cosineSim * 0.3)));
+  
+  // Experience score scaled by domain relevancy (unrelated domain years score lower for specialized roles)
+  const adjustedExpScore = Math.min(100, Math.max(25, Math.round(expDetails.score * domainAlignmentFactor)));
+
+  // 4. Project & Architecture Score (evaluated against semantic similarity, domain overlap, and complexity indicators)
   const lowerResume = resumeText.toLowerCase();
-  let projectScore = Math.min(95, Math.max(40, Math.round(50 + (cosineSim * 45))));
-  if (/\b(architecture|microservices|distributed systems|scale|high throughput|production)\b/i.test(lowerResume)) {
-    projectScore = Math.min(100, projectScore + 10);
+  let projectScore = Math.min(95, Math.max(30, Math.round((35 + (cosineSim * 35) + (reqMatchRatio * 30)))));
+  if (/\b(architecture|microservices|distributed systems|scale|high throughput|production|design systems|framework)\b/i.test(lowerResume)) {
+    projectScore = Math.min(100, projectScore + (reqMatchRatio > 0.3 ? 8 : 2));
   }
 
   // 5. Soft Skills & Leadership Score
@@ -530,7 +550,7 @@ export function evaluateResumeAgainstJD(
   // 6. Assemble component scores
   const scoreBreakdown = {
     skillMatch: compositeSkillScore,
-    experienceMatch: expDetails.score,
+    experienceMatch: adjustedExpScore,
     projectMatch: projectScore,
     educationMatch: eduDetails.score,
     certificationMatch: certDetails.score,
