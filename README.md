@@ -373,7 +373,3 @@ Generates downloadable CSV spreadsheets and JSON files from candidate arrays.
 - 🏗️ **[System Architecture Guide](./ARCHITECTURE.md)** — Architectural patterns, pipelines, and technical decisions.
 - 📊 **[Technical Specification Report](./TECHNICAL_REPORT.md)** — Benchmarking, model parameters, and testing suite.
 
----
-
-## 📜 License
-Licensed under the [MIT License](LICENSE). © 2026 ResumeFlow AI. Precision Intelligence for Talent Acquisition.
