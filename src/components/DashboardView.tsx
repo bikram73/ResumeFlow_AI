@@ -146,21 +146,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   };
 
   const handleStartAnalysis = async () => {
+    if (stagedFiles.length === 0) {
+      setStatusMessage('⚠️ Please upload at least one candidate resume file (.pdf, .docx, .txt) below to run AI screening.');
+      resumeFileInputRef.current?.click();
+      setTimeout(() => setStatusMessage(''), 5000);
+      return;
+    }
+
     const currentJd = (jdInputText && jdInputText.trim().length > 0)
       ? jdInputText.trim()
       : (jobDescription.rawText || initialJobDescription.rawText);
 
-    const itemsToProcess: StagedFileItem[] = stagedFiles.length > 0
-      ? stagedFiles
-      : sampleResumesBatch.map((s) => ({
-          name: s.fileName,
-          type: s.fileType,
-          text: s.text,
-        }));
-
     const payloadResumes: { fileName: string; fileType: string; base64?: string; text?: string }[] = [];
 
-    for (const item of itemsToProcess) {
+    for (const item of stagedFiles) {
       if (item.text) {
         payloadResumes.push({
           fileName: item.name,
