@@ -119,64 +119,14 @@ export default function App() {
 
         setCandidates(uniqueList);
         setSelectedCandidate(uniqueList[0]);
+      } else {
+        throw new Error('No candidate evaluations returned from parser.');
       }
 
       setScreeningProgress(100);
     } catch (err: any) {
       console.error('Error during AI Screening:', err);
-      // Fallback: Generate structured scored candidates exclusively from the user-uploaded files
-      const fallbackList: Candidate[] = resumeFiles.map((rf, idx) => {
-        const nameClean = (rf.fileName || `Candidate ${idx + 1}`).replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
-        const score = 85;
-        return {
-          id: `c_fb_${Date.now()}_${idx}`,
-          rank: idx + 1,
-          name: nameClean,
-          email: `${nameClean.toLowerCase().replace(/\s+/g, '.')}@talentpool.io`,
-          phone: '+1 (555) 234-5678',
-          role: 'Candidate for ' + (jobDescription.title || 'Target Role'),
-          company: 'Applicant File: ' + rf.fileName,
-          location: 'Remote / Direct Applicant',
-          matchScore: score,
-          skills: jobDescription.requiredSkills?.slice(0, 4) || ['Technical Expertise', 'Domain Competency'],
-          missingSkills: jobDescription.preferredSkills?.slice(0, 2) || ['Secondary Frameworks'],
-          experience: 'Verified Candidate Profile',
-          education: jobDescription.educationRequired || "Relevant Technical Degree",
-          status: 'Screened',
-          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(nameClean)}`,
-          topMatch: idx === 0,
-          aiVerified: true,
-          ocrProcessed: true,
-          ocrMethod: 'Multimodal OCR Engine',
-          aiSummary: `${nameClean} was screened directly against ${jobDescription.title || 'the selected job requirements'} with evaluated resume content from ${rf.fileName}.`,
-          hiringConfidence: 'High',
-          overallMatchNumber: score,
-          scores: {
-            skillMatch: 85,
-            experienceMatch: 85,
-            projectMatch: 85,
-            educationMatch: 85,
-            certificationMatch: 80,
-            softSkillsMatch: 85,
-            overallScore: score,
-          },
-          recommendation: 'Recommended',
-          timeline: [{ period: 'Recent Experience', role: 'Applicant Profile', company: rf.fileName }],
-          strengths: ['Direct resume document parsed', 'Evaluation completed against selected JD'],
-          growthAreas: ['Detailed interviews recommended'],
-        };
-      });
-
-      if (fallbackList.length > 0) {
-        fallbackList.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
-        fallbackList.forEach((c, i) => {
-          c.rank = i + 1;
-          c.topMatch = i === 0;
-        });
-        setCandidates(fallbackList);
-        setSelectedCandidate(fallbackList[0]);
-      }
-      setScreeningProgress(100);
+      alert(`Screening Error: ${err.message || 'Unable to analyze resumes at this time'}. Please check your document formats and retry.`);
     } finally {
       setIsScreening(false);
     }
