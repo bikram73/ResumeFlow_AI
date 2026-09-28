@@ -71,7 +71,14 @@ export const UtilityView: React.FC<UtilityViewProps> = ({ candidates, setActiveT
       }
     } catch (err: any) {
       console.error('OCR Extraction Error:', err);
-      alert('OCR Extraction Error: ' + (err.message || 'Failed to extract text from document.'));
+      setOcrResult({
+        success: false,
+        text: '',
+        fileName: file.name,
+        fileType: file.type || 'application/octet-stream',
+        extractionMethod: 'Fallback Parser',
+        error: err.message || 'Failed to extract text from document.'
+      });
       setOcrLoading(false);
     }
   };

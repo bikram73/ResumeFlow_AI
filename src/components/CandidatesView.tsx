@@ -19,6 +19,9 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
 }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isRecalculating, setIsRecalculating] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [filterThreshold, setFilterThreshold] = useState<number>(0);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
 
   const handleCandidateClick = (c: Candidate) => {
     setSelectedCandidate(c);
@@ -29,8 +32,9 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
     setIsRecalculating(true);
     setTimeout(() => {
       setIsRecalculating(false);
-      alert('AI Scores successfully recalculated based on current Job Description criteria!');
-    }, 1800);
+      setToastMessage('✓ AI Scores successfully recalculated across candidate batch!');
+      setTimeout(() => setToastMessage(null), 3500);
+    }, 800);
   };
 
   return (
@@ -46,17 +50,48 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
               Senior Product Designer Role — Q4 Pipeline
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex items-center gap-3 relative">
             <button
-              onClick={() => alert('Filter options: Experience level, location, skill match threshold')}
-              className="bg-[#e1e2ed] text-[#434655] px-4 py-2 rounded-xl flex items-center gap-2 font-semibold text-xs md:text-sm hover:bg-[#c3c6d7] transition-all"
+              type="button"
+              onClick={() => setShowFilterMenu((prev) => !prev)}
+              className="bg-[#e1e2ed] text-[#434655] px-4 py-2 rounded-xl flex items-center gap-2 font-semibold text-xs md:text-sm hover:bg-[#c3c6d7] transition-all cursor-pointer"
             >
               <span className="material-symbols-outlined text-lg">filter_list</span>
-              <span>Filter</span>
+              <span>Filter {filterThreshold > 0 ? `(≥${filterThreshold}%)` : ''}</span>
             </button>
+
+            {showFilterMenu && (
+              <div className="absolute right-0 top-12 z-30 bg-white rounded-xl shadow-xl border border-[#c3c6d7]/40 p-3 w-56 animate-fade-in">
+                <p className="text-xs font-bold text-[#191b23] mb-2">Match Score Threshold</p>
+                <div className="flex flex-col gap-1.5 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => { setFilterThreshold(0); setShowFilterMenu(false); }}
+                    className={`text-left px-2.5 py-1.5 rounded-lg ${filterThreshold === 0 ? 'bg-[#004ac6] text-white' : 'hover:bg-[#ededf9]'}`}
+                  >
+                    All Candidates (100%)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setFilterThreshold(85); setShowFilterMenu(false); }}
+                    className={`text-left px-2.5 py-1.5 rounded-lg ${filterThreshold === 85 ? 'bg-[#004ac6] text-white' : 'hover:bg-[#ededf9]'}`}
+                  >
+                    High Potential (≥ 85%)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setFilterThreshold(90); setShowFilterMenu(false); }}
+                    className={`text-left px-2.5 py-1.5 rounded-lg ${filterThreshold === 90 ? 'bg-[#004ac6] text-white' : 'hover:bg-[#ededf9]'}`}
+                  >
+                    Top Tier (≥ 90%)
+                  </button>
+                </div>
+              </div>
+            )}
+
             <button
               onClick={handleRecalculate}
-              className="bg-[#004ac6] text-white px-4 py-2 rounded-xl flex items-center gap-2 font-semibold text-xs md:text-sm ai-glow shadow-md shadow-[#004ac6]/20 hover:bg-[#0053db] transition-all"
+              className="bg-[#004ac6] text-white px-4 py-2 rounded-xl flex items-center gap-2 font-semibold text-xs md:text-sm ai-glow shadow-md shadow-[#004ac6]/20 hover:bg-[#0053db] transition-all cursor-pointer"
             >
               <span className={`material-symbols-outlined text-lg ${isRecalculating ? 'animate-spin' : ''}`}>
                 bolt
@@ -65,6 +100,14 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
             </button>
           </div>
         </div>
+
+        {/* In-app Toast */}
+        {toastMessage && (
+          <div className="mb-6 p-3 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded-xl text-xs font-bold flex items-center gap-2 animate-fade-in">
+            <span className="material-symbols-outlined text-lg text-emerald-600">check_circle</span>
+            <span>{toastMessage}</span>
+          </div>
+        )}
 
         {/* Bento Analytics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-10 text-left">
@@ -165,7 +208,9 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#c3c6d7]/20">
-                {candidates.map((cand) => (
+                {candidates
+                  .filter((cand) => filterThreshold === 0 || cand.matchScore >= filterThreshold)
+                  .map((cand) => (
                   <tr
                     key={cand.id}
                     onClick={() => handleCandidateClick(cand)}

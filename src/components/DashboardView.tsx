@@ -353,7 +353,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* Resumes Hopper Panel */}
-            <div className="glass-panel p-6 rounded-2xl border border-[#c3c6d7]/30">
+            <div id="document-upload-section" className="glass-panel p-6 rounded-2xl border border-[#c3c6d7]/30 transition-all duration-300">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[#712ae2]">folder_open</span>
