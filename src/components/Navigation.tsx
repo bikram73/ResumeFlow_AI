@@ -29,9 +29,19 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
               </span>
             </button>
 
-            <nav className="hidden md:flex items-center gap-1 h-full">
+            <nav className="hidden md:flex items-center gap-1.5 h-full">
+              <button
+                onClick={() => setActiveTab('landing')}
+                className={`h-9 px-3.5 rounded-xl font-semibold text-xs md:text-sm transition-all duration-150 flex items-center gap-1.5 cursor-pointer ${
+                  activeTab === 'landing'
+                    ? 'text-white bg-[#004ac6] font-bold shadow-sm'
+                    : 'text-[#434655] bg-[#ededf9]/70 hover:text-[#004ac6] hover:bg-[#004ac6]/10'
+                }`}
+              >
+                <span className="material-symbols-outlined text-[16px]">home</span>
+                <span>Home Page</span>
+              </button>
               {[
-                { id: 'landing', label: 'Product' },
                 { id: 'dashboard', label: 'Solutions (Dashboard)' },
                 { id: 'candidates', label: 'Candidates' },
                 { id: 'utility', label: 'Utility Preview' },
