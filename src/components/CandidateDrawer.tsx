@@ -5,12 +5,14 @@ interface CandidateDrawerProps {
   candidate: Candidate | null;
   isOpen: boolean;
   onClose: () => void;
+  onDeleteCandidate?: (candidateId: string) => void;
 }
 
 export const CandidateDrawer: React.FC<CandidateDrawerProps> = ({
   candidate,
   isOpen,
   onClose,
+  onDeleteCandidate,
 }) => {
   const [activeTab, setActiveTab] = useState<'profile' | 'ocr'>('profile');
   const [copiedOcr, setCopiedOcr] = useState(false);
@@ -336,7 +338,7 @@ ${candidate.education || "Bachelor's Degree in Relevant Field"}
                 })`
               )
             }
-            className="flex-1 bg-[#004ac6] text-white py-3 rounded-xl font-bold text-sm shadow-md shadow-[#004ac6]/20 hover:bg-[#0053db] transition-all"
+            className="flex-1 bg-[#004ac6] text-white py-3 rounded-xl font-bold text-sm shadow-md shadow-[#004ac6]/20 hover:bg-[#0053db] transition-all cursor-pointer"
           >
             Schedule Interview
           </button>
@@ -350,11 +352,26 @@ ${candidate.education || "Bachelor's Degree in Relevant Field"}
               a.download = `${candidate.name.replace(/\s+/g, '_')}_AI_Report.json`;
               a.click();
             }}
-            className="bg-white border border-[#c3c6d7] px-4 py-3 rounded-xl text-[#434655] hover:bg-[#e1e2ed]/20 transition-all flex items-center justify-center gap-2 text-sm font-semibold"
+            className="bg-white border border-[#c3c6d7] px-4 py-3 rounded-xl text-[#434655] hover:bg-[#e1e2ed]/20 transition-all flex items-center justify-center gap-2 text-sm font-semibold cursor-pointer"
           >
             <span className="material-symbols-outlined text-lg">download</span>
             <span>Download Dossier</span>
           </button>
+          {onDeleteCandidate && (
+            <button
+              onClick={() => {
+                if (window.confirm(`Are you sure you want to delete candidate "${candidate.name}"?`)) {
+                  onDeleteCandidate(candidate.id);
+                  onClose();
+                }
+              }}
+              title="Delete this candidate"
+              className="bg-[#fee2e2] border border-red-200 text-[#b91c1c] hover:bg-[#fecaca] px-4 py-3 rounded-xl transition-all flex items-center justify-center gap-1.5 text-sm font-semibold cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-lg">delete</span>
+              <span>Delete</span>
+            </button>
+          )}
         </div>
       </div>
     </>

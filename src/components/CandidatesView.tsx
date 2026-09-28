@@ -9,6 +9,7 @@ interface CandidatesViewProps {
   selectedCandidate: Candidate | null;
   setSelectedCandidate: (c: Candidate | null) => void;
   onClearCandidates?: () => void;
+  onDeleteCandidate?: (candidateId: string) => void;
   onLoadSampleData?: () => void;
 }
 
@@ -18,6 +19,7 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
   selectedCandidate,
   setSelectedCandidate,
   onClearCandidates,
+  onDeleteCandidate,
   onLoadSampleData,
 }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -133,6 +135,18 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
               </span>
               <span>{isRecalculating ? 'Recalculating...' : 'Recalculate AI Scores'}</span>
             </button>
+
+            {candidates.length > 0 && onClearCandidates && (
+              <button
+                type="button"
+                onClick={onClearCandidates}
+                title="Delete all candidate records"
+                className="bg-[#fee2e2] text-[#b91c1c] hover:bg-[#fecaca] px-4 py-2 rounded-xl flex items-center gap-1.5 font-semibold text-xs md:text-sm transition-all cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-lg">delete_sweep</span>
+                <span>Delete All</span>
+              </button>
+            )}
 
             <button
               onClick={() => setActiveTab('dashboard')}
@@ -377,16 +391,29 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
                         </span>
                       </td>
                       <td className="p-4 text-right">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleCandidateClick(cand);
-                          }}
-                          className="text-[#004ac6] hover:underline font-semibold text-xs md:text-sm cursor-pointer"
-                        >
-                          View Details
-                        </button>
+                        <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            type="button"
+                            onClick={() => handleCandidateClick(cand)}
+                            className="bg-[#004ac6]/10 text-[#004ac6] hover:bg-[#004ac6] hover:text-white px-3 py-1.5 rounded-lg font-semibold text-xs transition-all cursor-pointer"
+                          >
+                            View Details
+                          </button>
+                          {onDeleteCandidate && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (window.confirm(`Delete candidate "${cand.name}"?`)) {
+                                  onDeleteCandidate(cand.id);
+                                }
+                              }}
+                              title={`Delete ${cand.name}`}
+                              className="p-1.5 text-[#737686] hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                            >
+                              <span className="material-symbols-outlined text-base">delete</span>
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -402,6 +429,7 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
         candidate={selectedCandidate}
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
+        onDeleteCandidate={onDeleteCandidate}
       />
 
       <Footer />

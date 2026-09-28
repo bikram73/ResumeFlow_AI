@@ -14,6 +14,7 @@ interface DashboardViewProps {
   isScreening: boolean;
   screeningProgress: number;
   onClearCandidates?: () => void;
+  onDeleteCandidate?: (candidateId: string) => void;
   onLoadSampleData?: () => void;
 }
 
@@ -34,6 +35,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   isScreening,
   screeningProgress,
   onClearCandidates,
+  onDeleteCandidate,
   onLoadSampleData,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -436,18 +438,29 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
               {/* Staged files queue */}
               {stagedFiles.length > 0 && (
-                <div className="mt-4 space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
-                  <p className="text-xs font-bold text-[#434655]">Staged Resumes Queue ({stagedFiles.length}):</p>
+                <div className="mt-4 space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-[#434655]">Staged Resumes Queue ({stagedFiles.length}):</p>
+                    <button
+                      type="button"
+                      onClick={() => setStagedFiles([])}
+                      className="text-xs text-red-600 hover:text-red-800 font-semibold flex items-center gap-1 cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-sm">delete_sweep</span>
+                      <span>Clear All Files</span>
+                    </button>
+                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {stagedFiles.map((sf, i) => (
-                      <div key={i} className="flex items-center justify-between p-2 bg-white rounded-lg border border-[#c3c6d7]/30 text-xs">
+                      <div key={i} className="flex items-center justify-between p-2.5 bg-white rounded-lg border border-[#c3c6d7]/40 text-xs shadow-2xs hover:border-[#004ac6]/30 transition-all">
                         <span className="truncate font-medium text-[#191b23] max-w-[180px]">{sf.name}</span>
                         <button
                           type="button"
                           onClick={() => setStagedFiles((prev) => prev.filter((_, idx) => idx !== i))}
-                          className="text-red-500 hover:text-red-700 font-bold ml-2 cursor-pointer"
+                          title="Remove file"
+                          className="text-[#737686] hover:text-red-600 font-bold ml-2 p-1 rounded hover:bg-red-50 transition-colors cursor-pointer flex items-center justify-center"
                         >
-                          ✕
+                          <span className="material-symbols-outlined text-sm">close</span>
                         </button>
                       </div>
                     ))}
@@ -582,7 +595,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </p>
             </div>
 
-            <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="flex items-center gap-2.5 w-full sm:w-auto flex-wrap sm:flex-nowrap">
               {candidates.length > 0 && (
                 <div className="relative flex-1 sm:w-56">
                   <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#737686] text-[18px]">
@@ -597,13 +610,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   />
                 </div>
               )}
+              {candidates.length > 0 && onClearCandidates && (
+                <button
+                  type="button"
+                  onClick={onClearCandidates}
+                  title="Clear all stored candidate records"
+                  className="bg-[#fee2e2] text-[#b91c1c] hover:bg-[#fecaca] px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all whitespace-nowrap cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-sm">delete_forever</span>
+                  <span className="hidden sm:inline">Delete All</span>
+                </button>
+              )}
               {candidates.length > 0 && (
                 <button
                   type="button"
                   onClick={() => setActiveTab('candidates')}
                   className="bg-[#004ac6] text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 hover:bg-[#0053db] transition-all whitespace-nowrap cursor-pointer shadow-sm"
                 >
-                  <span>View All Candidates ({candidates.length})</span>
+                  <span>View All ({candidates.length})</span>
                   <span className="material-symbols-outlined text-sm">arrow_forward</span>
                 </button>
               )}
@@ -657,7 +681,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <th className="px-6 py-3.5">Overall Score</th>
                     <th className="px-6 py-3.5">Skills</th>
                     <th className="px-6 py-3.5">Recommendation</th>
-                    <th className="px-6 py-3.5 text-right">Action</th>
+                    <th className="px-6 py-3.5 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#c3c6d7]/20">
@@ -668,7 +692,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         onSelectCandidate(cand);
                         setActiveTab('candidates');
                       }}
-                      className="hover:bg-[#004ac6]/5 transition-colors cursor-pointer"
+                      className="hover:bg-[#004ac6]/5 transition-colors cursor-pointer group"
                     >
                       <td className="px-6 py-4 font-bold text-[#004ac6]">#{cand.rank}</td>
                       <td className="px-6 py-4">
@@ -716,17 +740,32 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onSelectCandidate(cand);
-                            setActiveTab('candidates');
-                          }}
-                          className="bg-[#2563eb] text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold hover:opacity-90 transition-all cursor-pointer"
-                        >
-                          Profile
-                        </button>
+                        <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onSelectCandidate(cand);
+                              setActiveTab('candidates');
+                            }}
+                            className="bg-[#2563eb] text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-[#1d4ed8] transition-all cursor-pointer"
+                          >
+                            Profile
+                          </button>
+                          {onDeleteCandidate && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (window.confirm(`Delete candidate "${cand.name}"?`)) {
+                                  onDeleteCandidate(cand.id);
+                                }
+                              }}
+                              title={`Delete ${cand.name}`}
+                              className="p-1.5 text-[#737686] hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                            >
+                              <span className="material-symbols-outlined text-base">delete</span>
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}

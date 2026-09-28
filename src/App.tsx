@@ -183,12 +183,26 @@ export default function App() {
   };
 
   const handleClearAllCandidates = () => {
-    if (window.confirm('Are you sure you want to clear all stored candidates from LocalStorage?')) {
+    if (window.confirm('Are you sure you want to clear all candidate records? This cannot be undone.')) {
       setCandidates([]);
       setSelectedCandidate(null);
       try {
         localStorage.removeItem(CANDIDATES_STORAGE_KEY);
       } catch (e) {}
+    }
+  };
+
+  const handleDeleteCandidate = (candidateId: string) => {
+    setCandidates((prev) => {
+      const updated = prev.filter((c) => c.id !== candidateId);
+      updated.forEach((c, idx) => {
+        c.rank = idx + 1;
+        c.topMatch = idx === 0;
+      });
+      return updated;
+    });
+    if (selectedCandidate?.id === candidateId) {
+      setSelectedCandidate(null);
     }
   };
 
@@ -219,6 +233,7 @@ export default function App() {
           isScreening={isScreening}
           screeningProgress={screeningProgress}
           onClearCandidates={handleClearAllCandidates}
+          onDeleteCandidate={handleDeleteCandidate}
           onLoadSampleData={handleLoadSampleData}
         />
       )}
@@ -230,6 +245,7 @@ export default function App() {
           selectedCandidate={selectedCandidate}
           setSelectedCandidate={setSelectedCandidate}
           onClearCandidates={handleClearAllCandidates}
+          onDeleteCandidate={handleDeleteCandidate}
           onLoadSampleData={handleLoadSampleData}
         />
       )}
