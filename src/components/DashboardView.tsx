@@ -196,11 +196,26 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     await onRunScreening(currentJd, payloadResumes);
   };
 
+  const [selectedRoleFilter, setSelectedRoleFilter] = useState<string>('all');
+
+  // Extract unique target roles evaluated
+  const uniqueRoles = Array.from(
+    new Set(candidates.map((c) => c.targetRole || 'Screened Role').filter(Boolean))
+  );
+
   const filteredCandidates = candidates.filter(
-    (c) =>
-      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.skills.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()))
+    (c) => {
+      const matchesSearch =
+        c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        c.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (c.targetRole && c.targetRole.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        c.skills.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
+      
+      const matchesRole =
+        selectedRoleFilter === 'all' || (c.targetRole || 'Screened Role') === selectedRoleFilter;
+
+      return matchesSearch && matchesRole;
+    }
   );
 
   // Show only recent 5 on the Dashboard table
@@ -614,8 +629,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             <div className="flex items-center gap-2.5 w-full sm:w-auto flex-wrap sm:flex-nowrap">
+              {candidates.length > 0 && uniqueRoles.length > 1 && (
+                <div className="relative">
+                  <select
+                    value={selectedRoleFilter}
+                    onChange={(e) => setSelectedRoleFilter(e.target.value)}
+                    className="bg-[#ededf9] text-[#191b23] px-3 py-2 rounded-xl text-xs font-semibold border-none focus:ring-2 focus:ring-[#004ac6]/20 cursor-pointer"
+                  >
+                    <option value="all">All Evaluated Roles ({candidates.length})</option>
+                    {uniqueRoles.map((role, idx) => (
+                      <option key={idx} value={role}>
+                        🎯 {role.length > 28 ? `${role.substring(0, 26)}...` : role} ({candidates.filter((c) => (c.targetRole || 'Screened Role') === role).length})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
               {candidates.length > 0 && (
-                <div className="relative flex-1 sm:w-56">
+                <div className="relative flex-1 sm:w-52">
                   <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#737686] text-[18px]">
                     search
                   </span>

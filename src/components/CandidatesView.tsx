@@ -48,12 +48,21 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
     }, 800);
   };
 
+  const [selectedRoleFilter, setSelectedRoleFilter] = useState<string>('all');
+
+  // Extract unique target roles evaluated
+  const uniqueRoles = Array.from(
+    new Set(candidates.map((c) => c.targetRole || 'Screened Role').filter(Boolean))
+  );
+
   const filteredCandidates = candidates
     .filter((cand) => filterThreshold === 0 || (cand.matchScore || 0) >= filterThreshold)
+    .filter((cand) => selectedRoleFilter === 'all' || (cand.targetRole || 'Screened Role') === selectedRoleFilter)
     .filter(
       (cand) =>
         cand.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         cand.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (cand.targetRole && cand.targetRole.toLowerCase().includes(searchQuery.toLowerCase())) ||
         cand.skills.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
@@ -272,14 +281,32 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
             <div className="flex items-center gap-2">
               <h3 className="font-headline-sm text-base font-bold text-[#191b23]">All Screened Candidates ({candidates.length})</h3>
             </div>
-            <div className="w-full sm:w-72">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search candidate name, role, skill..."
-                className="w-full bg-white px-3 py-1.5 rounded-lg border border-[#c3c6d7]/40 text-xs focus:ring-2 focus:ring-[#004ac6]/20"
-              />
+            <div className="flex items-center gap-2.5 w-full sm:w-auto flex-wrap sm:flex-nowrap">
+              {candidates.length > 0 && uniqueRoles.length > 1 && (
+                <div className="relative">
+                  <select
+                    value={selectedRoleFilter}
+                    onChange={(e) => setSelectedRoleFilter(e.target.value)}
+                    className="bg-white text-[#191b23] px-3 py-1.5 rounded-lg text-xs font-semibold border border-[#c3c6d7]/40 focus:ring-2 focus:ring-[#004ac6]/20 cursor-pointer"
+                  >
+                    <option value="all">All Evaluated Roles ({candidates.length})</option>
+                    {uniqueRoles.map((role, idx) => (
+                      <option key={idx} value={role}>
+                        🎯 {role.length > 28 ? `${role.substring(0, 26)}...` : role} ({candidates.filter((c) => (c.targetRole || 'Screened Role') === role).length})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <div className="w-full sm:w-64">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search candidate name, role, skill..."
+                  className="w-full bg-white px-3 py-1.5 rounded-lg border border-[#c3c6d7]/40 text-xs focus:ring-2 focus:ring-[#004ac6]/20"
+                />
+              </div>
             </div>
           </div>
 

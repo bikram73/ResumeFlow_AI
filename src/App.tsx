@@ -109,16 +109,25 @@ export default function App() {
       setScreeningProgress(95);
 
       if (analyzedCandidates && analyzedCandidates.length > 0) {
-        // Sort by match score descending
-        const uniqueList = [...analyzedCandidates];
-        uniqueList.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
-        uniqueList.forEach((c, idx) => {
-          c.rank = idx + 1;
-          c.topMatch = idx === 0;
+        // Tag targetRole accurately
+        const currentTargetRole = jobDescription.title || (effectiveJd ? effectiveJd.split('\n')[0].trim().replace(/^#+\s*/, '') : 'Target Role');
+        analyzedCandidates.forEach((c) => {
+          if (!c.targetRole || c.targetRole === 'Target Role') {
+            c.targetRole = currentTargetRole;
+          }
         });
 
-        setCandidates(uniqueList);
-        setSelectedCandidate(uniqueList[0]);
+        // Add newly analyzed candidates to candidates list (preserving multi-role evaluations)
+        setCandidates((prev) => {
+          const combined = [...analyzedCandidates, ...prev];
+          combined.forEach((c, idx) => {
+            c.rank = idx + 1;
+            c.topMatch = idx === 0;
+          });
+          return combined;
+        });
+
+        setSelectedCandidate(analyzedCandidates[0]);
       } else {
         throw new Error('No candidate evaluations returned from parser.');
       }
