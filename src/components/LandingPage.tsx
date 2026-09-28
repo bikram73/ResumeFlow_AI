@@ -285,6 +285,142 @@ export const LandingPage: React.FC<LandingPageProps> = ({ setActiveTab }) => {
         </div>
       </section>
 
+      {/* Deep-Dive Capabilities Section */}
+      <section className="py-20 bg-[#faf8ff] border-t border-[#c3c6d7]/30">
+        <div className="max-w-[1440px] mx-auto px-6">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-[#004ac6]/10 text-[#004ac6] px-3.5 py-1.5 rounded-full text-xs font-bold mb-4">
+              <span className="material-symbols-outlined text-[16px]">verified</span>
+              Full Feature Matrix
+            </div>
+            <h2 className="font-headline-lg text-2xl md:text-3xl font-bold mb-3">
+              Engineered for Precision Recruitment
+            </h2>
+            <p className="text-[#434655] max-w-2xl mx-auto text-sm md:text-base">
+              Every tool and algorithm designed to provide transparent, explainable, and bias-free candidate rankings.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            <div className="bg-white p-7 rounded-3xl border border-[#c3c6d7]/40 shadow-sm hover:shadow-md transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-[#004ac6]/10 flex items-center justify-center text-[#004ac6] mb-5">
+                <span className="material-symbols-outlined text-2xl">compare</span>
+              </div>
+              <h3 className="font-headline-sm text-lg font-bold mb-2 text-[#191b23]">Side-by-Side Comparison</h3>
+              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
+                Select any two candidates to view real-time score breakdowns across Skills, Experience, Education, Projects, and Certifications.
+              </p>
+            </div>
+
+            <div className="bg-white p-7 rounded-3xl border border-[#c3c6d7]/40 shadow-sm hover:shadow-md transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-[#712ae2]/10 flex items-center justify-center text-[#712ae2] mb-5">
+                <span className="material-symbols-outlined text-2xl">troubleshoot</span>
+              </div>
+              <h3 className="font-headline-sm text-lg font-bold mb-2 text-[#191b23]">Missing Skills Detector</h3>
+              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
+                Instantly flags hard and soft skills required by your Job Description that are absent from the applicant's resume.
+              </p>
+            </div>
+
+            <div className="bg-white p-7 rounded-3xl border border-[#c3c6d7]/40 shadow-sm hover:shadow-md transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-[#004ac6]/10 flex items-center justify-center text-[#004ac6] mb-5">
+                <span className="material-symbols-outlined text-2xl">shield</span>
+              </div>
+              <h3 className="font-headline-sm text-lg font-bold mb-2 text-[#191b23]">Zero PII Retention</h3>
+              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
+                Parsed resumes and candidate data reside in browser storage. No persistent databases or tracking of private applicant data.
+              </p>
+            </div>
+
+            <div className="bg-white p-7 rounded-3xl border border-[#c3c6d7]/40 shadow-sm hover:shadow-md transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-[#943700]/10 flex items-center justify-center text-[#943700] mb-5">
+                <span className="material-symbols-outlined text-2xl">document_scanner</span>
+              </div>
+              <h3 className="font-headline-sm text-lg font-bold mb-2 text-[#191b23]">Neural Multimodal OCR</h3>
+              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
+                Extracts clean text from scanned images and multi-column visual resumes with layout-aware intelligence.
+              </p>
+            </div>
+
+            <div className="bg-white p-7 rounded-3xl border border-[#c3c6d7]/40 shadow-sm hover:shadow-md transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-[#004ac6]/10 flex items-center justify-center text-[#004ac6] mb-5">
+                <span className="material-symbols-outlined text-2xl">cached</span>
+              </div>
+              <h3 className="font-headline-sm text-lg font-bold mb-2 text-[#191b23]">Cross-Role Calibration</h3>
+              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
+                Evaluate the same candidate against multiple job descriptions to find alternate placement opportunities across teams.
+              </p>
+            </div>
+
+            <div className="bg-white p-7 rounded-3xl border border-[#c3c6d7]/40 shadow-sm hover:shadow-md transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-[#712ae2]/10 flex items-center justify-center text-[#712ae2] mb-5">
+                <span className="material-symbols-outlined text-2xl">file_download</span>
+              </div>
+              <h3 className="font-headline-sm text-lg font-bold mb-2 text-[#191b23]">Exportable Intelligence</h3>
+              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
+                Download structured ranking reports in CSV or JSON formats for seamless integration with ATS and HR pipelines.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Frequently Asked Questions */}
+      <section className="py-20 bg-white border-t border-[#c3c6d7]/30">
+        <div className="max-w-[1000px] mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="font-headline-lg text-2xl md:text-3xl font-bold mb-3">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-[#434655] text-sm md:text-base">
+              Everything you need to know about ResumeFlow AI's screening algorithms and privacy architecture.
+            </p>
+          </div>
+
+          <div className="space-y-4 text-left">
+            <div className="p-6 rounded-2xl bg-[#faf8ff] border border-[#c3c6d7]/40">
+              <h4 className="font-bold text-base text-[#191b23] mb-2 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#004ac6] text-xl">help</span>
+                How are candidate match scores calculated?
+              </h4>
+              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
+                ResumeFlow AI uses a rigorous 6-factor weighted formula: Skill Match (40%), Relevant Experience (25%), Project Alignment (15%), Education (10%), Certifications (5%), and Soft Skills (5%).
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[#faf8ff] border border-[#c3c6d7]/40">
+              <h4 className="font-bold text-base text-[#191b23] mb-2 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#004ac6] text-xl">help</span>
+                What file types are supported for resume uploads?
+              </h4>
+              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
+                You can upload PDF files, Microsoft Word (.docx), plain text (.txt, .md), and scanned image resumes (.png, .jpg, .jpeg, .webp).
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[#faf8ff] border border-[#c3c6d7]/40">
+              <h4 className="font-bold text-base text-[#191b23] mb-2 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#004ac6] text-xl">help</span>
+                Can I evaluate the same resume for different roles?
+              </h4>
+              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
+                Yes! When you change the Job Description and re-screen, the engine dynamically recalculates the candidate's scores, highlights role-specific strengths, and displays the exact target role on each candidate card.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[#faf8ff] border border-[#c3c6d7]/40">
+              <h4 className="font-bold text-base text-[#191b23] mb-2 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#004ac6] text-xl">help</span>
+                Is applicant data kept private and secure?
+              </h4>
+              <p className="text-[#434655] text-xs md:text-sm leading-relaxed">
+                All resume analysis and extraction is processed securely via server-side proxies, and candidate records are stored strictly in your browser session for maximum data sovereignty.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Analytics Preview */}
       <section className="py-20 bg-[#faf8ff]">
         <div className="max-w-[1440px] mx-auto px-6">
