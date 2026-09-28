@@ -13,6 +13,16 @@
 [![Express](https://img.shields.io/badge/Express-4.21-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
 [![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 
+<p align="center">
+  <a href="https://github.com/bikram73/ResumeFlow_AI/" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github" alt="GitHub Repository" />
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://resumes-flow-ai.netlify.app/" target="_blank">
+    <img src="https://img.shields.io/badge/Live-Demo-007ACC?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Deploy" />
+  </a>
+</p>
+
 </div>
 
 ---
