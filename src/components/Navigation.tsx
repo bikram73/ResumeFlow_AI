@@ -11,8 +11,9 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
     <>
       {/* Top Bar */}
       <header className="fixed top-0 left-0 right-0 w-full h-[72px] z-50 bg-white/85 backdrop-blur-xl border-b border-[#c3c6d7]/30">
-        <div className="max-w-7xl mx-auto w-full h-full flex items-center justify-between px-4 md:px-8">
-          <div className="flex items-center gap-8 h-full">
+        <div className="max-w-7xl mx-auto w-full h-full flex items-center justify-between px-4 md:px-8 gap-4">
+          {/* Brand Logo (Left) */}
+          <div className="flex items-center shrink-0">
             <button 
               onClick={() => setActiveTab('landing')}
               className="flex items-center gap-3 text-left focus:outline-none group cursor-pointer select-none"
@@ -28,43 +29,45 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
                 ResumeFlow <span className="text-[11px] font-bold bg-[#2563eb]/10 text-[#004ac6] px-1.5 py-0.5 rounded-md tracking-normal border border-[#004ac6]/20 leading-none">AI</span>
               </span>
             </button>
-
-            <nav className="hidden md:flex items-center gap-1.5 h-full">
-              <button
-                onClick={() => setActiveTab('landing')}
-                className={`h-9 px-3.5 rounded-xl font-semibold text-xs md:text-sm transition-all duration-150 flex items-center gap-1.5 cursor-pointer ${
-                  activeTab === 'landing'
-                    ? 'text-white bg-[#004ac6] font-bold shadow-sm'
-                    : 'text-[#434655] bg-[#ededf9]/70 hover:text-[#004ac6] hover:bg-[#004ac6]/10'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[16px]">home</span>
-                <span>Home Page</span>
-              </button>
-              {[
-                { id: 'dashboard', label: 'Solutions' },
-                { id: 'candidates', label: 'Candidates' },
-                { id: 'utility', label: 'Utility Preview' },
-              ].map((tab) => {
-                const isActive = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id as ActiveTab)}
-                    className={`h-9 px-3.5 rounded-xl font-semibold text-xs md:text-sm transition-all duration-150 flex items-center gap-1.5 cursor-pointer ${
-                      isActive
-                        ? 'text-white bg-[#004ac6] font-bold shadow-sm'
-                        : 'text-[#434655] bg-[#ededf9]/70 hover:text-[#004ac6] hover:bg-[#004ac6]/10'
-                    }`}
-                  >
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
-            </nav>
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* Centered Navigation Links (Desktop) */}
+          <nav className="hidden md:flex items-center justify-center gap-1.5 bg-[#f3f4fa]/90 p-1.5 rounded-2xl border border-[#c3c6d7]/30 shadow-xs">
+            <button
+              onClick={() => setActiveTab('landing')}
+              className={`h-9 px-3.5 rounded-xl font-semibold text-xs md:text-sm transition-all duration-150 flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'landing'
+                  ? 'text-white bg-[#004ac6] font-bold shadow-sm'
+                  : 'text-[#434655] hover:text-[#004ac6] hover:bg-[#004ac6]/10'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[16px]">home</span>
+              <span>Home Page</span>
+            </button>
+            {[
+              { id: 'dashboard', label: 'Solutions' },
+              { id: 'candidates', label: 'Candidates' },
+              { id: 'utility', label: 'Utility Preview' },
+            ].map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as ActiveTab)}
+                  className={`h-9 px-3.5 rounded-xl font-semibold text-xs md:text-sm transition-all duration-150 flex items-center gap-1.5 cursor-pointer ${
+                    isActive
+                      ? 'text-white bg-[#004ac6] font-bold shadow-sm'
+                      : 'text-[#434655] hover:text-[#004ac6] hover:bg-[#004ac6]/10'
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Right Action Button */}
+          <div className="flex items-center justify-end shrink-0">
             <button
               onClick={() => setActiveTab(activeTab === 'landing' ? 'dashboard' : 'landing')}
               className="bg-[#004ac6] text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm hover:bg-[#1d4ed8] active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
