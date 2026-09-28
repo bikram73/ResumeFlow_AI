@@ -32,22 +32,24 @@
 <div align="center">
 
 | **<div align="center">📖 Description</div>** | **<div align="center">🚀 Section</div>** |
-|--------------------------------------------------------------|------------------------------------------------|
-| <div align="center">**View the project features and capabilities.** 👉</div> | <div align="center"><a href="#-features"><img src="https://img.shields.io/badge/✨%20Features-4F46E5?style=for-the-badge" /></a></div> |
-| <div align="center">**View the technologies, frameworks, and programming languages used.** 👉</div> | <div align="center"><a href="#-tech-stack"><img src="https://img.shields.io/badge/🛠️%20Tech%20Stack-0891B2?style=for-the-badge" /></a></div> |
-| <div align="center">**Explore the project's folder and file organization.** 👉</div> | <div align="center"><a href="#-file-structure"><img src="https://img.shields.io/badge/📂%20File%20Structure-10B981?style=for-the-badge" /></a></div> |
-| <div align="center">**Follow the installation steps and local development setup.** 👉</div> | <div align="center"><a href="#-installation"><img src="https://img.shields.io/badge/🚀%20Installation-F97316?style=for-the-badge" /></a></div> |
-| <div align="center">**Understand how confidence scores are calculated and interpreted.** 👉</div> | <div align="center"><a href="#-confidence-scores"><img src="https://img.shields.io/badge/📊%20Confidence%20Scores-2563EB?style=for-the-badge" /></a></div> |
-| <div align="center">**View the available REST API endpoints and usage examples.** 👉</div> | <div align="center"><a href="#-api-documentation"><img src="https://img.shields.io/badge/🌐%20API%20Documentation-0EA5E9?style=for-the-badge" /></a></div> |
-| <div align="center">**Explore the complete system architecture, AI workflow, processing pipeline, data flow, deployment design, and technical decisions.** 👉</div> | <div align="center"><a href="./ARCHITECTURE.md"><img src="https://img.shields.io/badge/🏗️%20Architecture%20Document-DC2626?style=for-the-badge" /></a></div> |
-| <div align="center">**Review implementation details, AI pipeline, performance metrics, benchmarking, validation strategy, privacy, testing, and technical specifications.** 👉</div> | <div align="center"><a href="./TECHNICAL_REPORT.md"><img src="https://img.shields.io/badge/📊%20Technical%20Report-2563EB?style=for-the-badge" /></a></div> |
-| <div align="center">**Review processing speed, latency, and performance benchmarks.** 👉</div> | <div align="center"><a href="#-performance"><img src="https://img.shields.io/badge/⚡%20Performance-F59E0B?style=for-the-badge" /></a></div> |
-| <div align="center">**Understand the current limitations and known failure cases of the AI extractor.** 👉</div> | <div align="center"><a href="#-known-limitations"><img src="https://img.shields.io/badge/⚠️%20Known%20Limitations-EF4444?style=for-the-badge" /></a></div> |
+|:---|:---:|
+| <div align="center">**View the project features and capabilities.** 👉</div> | <div align="center"><a href="#features"><img src="https://img.shields.io/badge/✨%20Features-4F46E5?style=for-the-badge" alt="Features" /></a></div> |
+| <div align="center">**View the technologies, frameworks, and programming languages used.** 👉</div> | <div align="center"><a href="#tech-stack"><img src="https://img.shields.io/badge/🛠️%20Tech%20Stack-0891B2?style=for-the-badge" alt="Tech Stack" /></a></div> |
+| <div align="center">**Explore the project's folder and file organization.** 👉</div> | <div align="center"><a href="#file-structure"><img src="https://img.shields.io/badge/📂%20File%20Structure-10B981?style=for-the-badge" alt="File Structure" /></a></div> |
+| <div align="center">**Follow the installation steps and local development setup.** 👉</div> | <div align="center"><a href="#installation"><img src="https://img.shields.io/badge/🚀%20Installation-F97316?style=for-the-badge" alt="Installation" /></a></div> |
+| <div align="center">**Understand how confidence scores are calculated and interpreted.** 👉</div> | <div align="center"><a href="#confidence-scores"><img src="https://img.shields.io/badge/📊%20Confidence%20Scores-2563EB?style=for-the-badge" alt="Confidence Scores" /></a></div> |
+| <div align="center">**View the available REST API endpoints and usage examples.** 👉</div> | <div align="center"><a href="#api-documentation"><img src="https://img.shields.io/badge/🌐%20API%20Documentation-0EA5E9?style=for-the-badge" alt="API Documentation" /></a></div> |
+| <div align="center">**Explore the complete system architecture, AI workflow, processing pipeline, data flow, deployment design, and technical decisions.** 👉</div> | <div align="center"><a href="./ARCHITECTURE.md"><img src="https://img.shields.io/badge/🏗️%20Architecture%20Document-DC2626?style=for-the-badge" alt="Architecture Document" /></a></div> |
+| <div align="center">**Review implementation details, AI pipeline, performance metrics, benchmarking, validation strategy, privacy, testing, and technical specifications.** 👉</div> | <div align="center"><a href="./TECHNICAL_REPORT.md"><img src="https://img.shields.io/badge/📊%20Technical%20Report-2563EB?style=for-the-badge" alt="Technical Report" /></a></div> |
+| <div align="center">**Review processing speed, latency, and performance benchmarks.** 👉</div> | <div align="center"><a href="#performance"><img src="https://img.shields.io/badge/⚡%20Performance-F59E0B?style=for-the-badge" alt="Performance" /></a></div> |
+| <div align="center">**Understand the current limitations and known failure cases of the AI extractor.** 👉</div> | <div align="center"><a href="#known-limitations"><img src="https://img.shields.io/badge/⚠️%20Known%20Limitations-EF4444?style=for-the-badge" alt="Known Limitations" /></a></div> |
 
 </div>
 
 ---
 
+<a id="features"></a>
+<a id="-features"></a>
 <a name="features"></a>
 ## ✨ Features
 
@@ -88,6 +90,8 @@
 
 ---
 
+<a id="tech-stack"></a>
+<a id="-tech-stack"></a>
 <a name="tech-stack"></a>
 ## 🛠️ Tech Stack & Languages
 
@@ -116,6 +120,8 @@
 
 ---
 
+<a id="file-structure"></a>
+<a id="-file-structure"></a>
 <a name="file-structure"></a>
 ## 📂 File Structure
 
@@ -159,6 +165,8 @@ ai-resume-screener/
 
 ---
 
+<a id="installation"></a>
+<a id="-installation"></a>
 <a name="installation"></a>
 ## 🚀 Installation & Local Development
 
@@ -209,6 +217,9 @@ ai-resume-screener/
 
 ---
 
+<a id="confidence"></a>
+<a id="confidence-scores"></a>
+<a id="-confidence-scores"></a>
 <a name="confidence"></a>
 <a name="confidence-scores"></a>
 ## 📊 Confidence Scores & Evaluation Methodology
@@ -235,6 +246,9 @@ The ResumeFlow AI scoring engine calculates candidate suitability across 6 dimen
 
 ---
 
+<a id="api"></a>
+<a id="api-documentation"></a>
+<a id="-api-documentation"></a>
 <a name="api"></a>
 <a name="api-documentation"></a>
 ## 🌐 API Documentation
@@ -336,6 +350,8 @@ Generates downloadable CSV spreadsheets and JSON files from candidate arrays.
 
 ---
 
+<a id="performance"></a>
+<a id="-performance"></a>
 <a name="performance"></a>
 ## ⚡ Performance & Benchmarks
 
@@ -349,6 +365,9 @@ Generates downloadable CSV spreadsheets and JSON files from candidate arrays.
 
 ---
 
+<a id="limitations"></a>
+<a id="known-limitations"></a>
+<a id="-known-limitations"></a>
 <a name="limitations"></a>
 <a name="known-limitations"></a>
 ## ⚠️ Known Limitations & Edge Cases
