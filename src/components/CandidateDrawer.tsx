@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Candidate } from '../types';
+import { downloadCandidatePdfReport } from '../services/pdfReport';
 
 interface CandidateDrawerProps {
   candidate: Candidate | null;
@@ -331,16 +332,11 @@ ${candidate.education || "Bachelor's Degree in Relevant Field"}
         {/* Drawer Footer Actions */}
         <div className="p-6 bg-[#f3f3fe] border-t border-[#c3c6d7]/30 flex flex-col sm:flex-row gap-3">
           <button
-            onClick={() =>
-              alert(
-                `Interview invitation email generated for ${candidate.name} (${
-                  candidate.email || 'candidate@example.com'
-                })`
-              )
-            }
-            className="flex-1 bg-[#004ac6] text-white py-3 rounded-xl font-bold text-sm shadow-md shadow-[#004ac6]/20 hover:bg-[#0053db] transition-all cursor-pointer"
+            onClick={() => downloadCandidatePdfReport(candidate)}
+            className="flex-1 bg-[#004ac6] text-white py-3 px-4 rounded-xl font-bold text-sm shadow-md shadow-[#004ac6]/20 hover:bg-[#0053db] transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            Schedule Interview
+            <span className="material-symbols-outlined text-lg">picture_as_pdf</span>
+            <span>Download PDF Report</span>
           </button>
           <button
             onClick={() => {
@@ -354,8 +350,8 @@ ${candidate.education || "Bachelor's Degree in Relevant Field"}
             }}
             className="bg-white border border-[#c3c6d7] px-4 py-3 rounded-xl text-[#434655] hover:bg-[#e1e2ed]/20 transition-all flex items-center justify-center gap-2 text-sm font-semibold cursor-pointer"
           >
-            <span className="material-symbols-outlined text-lg">download</span>
-            <span>Download Dossier</span>
+            <span className="material-symbols-outlined text-lg">data_object</span>
+            <span>Download JSON Dossier</span>
           </button>
           {onDeleteCandidate && (
             <button

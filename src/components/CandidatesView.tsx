@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ActiveTab, Candidate } from '../types';
+import { ActiveTab, Candidate, JobDescription } from '../types';
 import { Footer } from './Footer';
 import { CandidateDrawer } from './CandidateDrawer';
+import { downloadBatchCandidatesPdfReport } from '../services/pdfReport';
 
 interface CandidatesViewProps {
   candidates: Candidate[];
@@ -11,6 +12,8 @@ interface CandidatesViewProps {
   onClearCandidates?: () => void;
   onDeleteCandidate?: (candidateId: string) => void;
   onLoadSampleData?: () => void;
+  jobDescription?: JobDescription;
+  setJobDescription?: React.Dispatch<React.SetStateAction<JobDescription>>;
 }
 
 export const CandidatesView: React.FC<CandidatesViewProps> = ({
@@ -21,6 +24,8 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
   onClearCandidates,
   onDeleteCandidate,
   onLoadSampleData,
+  jobDescription,
+  setJobDescription,
 }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isRecalculating, setIsRecalculating] = useState(false);
@@ -28,10 +33,23 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
   const [filterThreshold, setFilterThreshold] = useState<number>(0);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [targetRoleInput, setTargetRoleInput] = useState(jobDescription?.title || 'Senior Software Engineer');
 
   const handleCandidateClick = (c: Candidate) => {
     setSelectedCandidate(c);
     setDrawerOpen(true);
+  };
+
+  const handleApplyJdRole = (roleTitle: string) => {
+    setTargetRoleInput(roleTitle);
+    if (setJobDescription) {
+      setJobDescription((prev) => ({
+        ...prev,
+        title: roleTitle,
+      }));
+    }
+    setToastMessage(`✓ Active JD Role updated to "${roleTitle}"!`);
+    setTimeout(() => setToastMessage(null), 3500);
   };
 
   const handleRecalculate = () => {
@@ -83,7 +101,7 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
     <div className="flex flex-col min-h-screen bg-[#faf8ff] pt-[72px]">
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 overflow-y-auto custom-scrollbar">
         {/* Header & Stats Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 text-left">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 text-left">
           <div>
             <div className="flex items-center gap-3">
               <h1 className="font-headline-lg text-2xl md:text-3xl font-bold text-[#191b23]">Candidate Directory</h1>
@@ -92,17 +110,26 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
               </span>
             </div>
             <p className="font-body-md text-[#434655] text-sm md:text-base mt-0.5">
-              All AI-evaluated candidates stored persistently in LocalStorage
+              Multi-role AI screening results with verified non-fabrication & deterministic scoring
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 relative">
+          <div className="flex flex-wrap items-center gap-2.5 relative">
+            <button
+              type="button"
+              onClick={() => downloadBatchCandidatesPdfReport(filteredCandidates, jobDescription?.title || targetRoleInput)}
+              className="bg-[#004ac6] text-white px-3.5 py-2 rounded-xl flex items-center gap-1.5 font-bold text-xs md:text-sm shadow-md shadow-[#004ac6]/20 hover:bg-[#0053db] transition-all cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-base">picture_as_pdf</span>
+              <span>Download PDF Summary</span>
+            </button>
+
             <button
               type="button"
               onClick={() => setShowFilterMenu((prev) => !prev)}
-              className="bg-[#e1e2ed] text-[#434655] px-4 py-2 rounded-xl flex items-center gap-2 font-semibold text-xs md:text-sm hover:bg-[#c3c6d7] transition-all cursor-pointer"
+              className="bg-[#e1e2ed] text-[#434655] px-3.5 py-2 rounded-xl flex items-center gap-1.5 font-semibold text-xs md:text-sm hover:bg-[#c3c6d7] transition-all cursor-pointer"
             >
-              <span className="material-symbols-outlined text-lg">filter_list</span>
+              <span className="material-symbols-outlined text-base">filter_list</span>
               <span>Filter {filterThreshold > 0 ? `(≥${filterThreshold}%)` : ''}</span>
             </button>
 
@@ -137,12 +164,12 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
 
             <button
               onClick={handleRecalculate}
-              className="bg-[#004ac6] text-white px-4 py-2 rounded-xl flex items-center gap-2 font-semibold text-xs md:text-sm ai-glow shadow-md shadow-[#004ac6]/20 hover:bg-[#0053db] transition-all cursor-pointer"
+              className="bg-[#ededf9] text-[#191b23] px-3.5 py-2 rounded-xl flex items-center gap-1.5 font-semibold text-xs md:text-sm hover:bg-[#e1e2ed] transition-all cursor-pointer"
             >
-              <span className={`material-symbols-outlined text-lg ${isRecalculating ? 'animate-spin' : ''}`}>
+              <span className={`material-symbols-outlined text-base ${isRecalculating ? 'animate-spin' : ''}`}>
                 bolt
               </span>
-              <span>{isRecalculating ? 'Recalculating...' : 'Recalculate AI Scores'}</span>
+              <span>{isRecalculating ? 'Recalculating...' : 'Recalculate'}</span>
             </button>
 
             {candidates.length > 0 && onClearCandidates && (
@@ -150,20 +177,80 @@ export const CandidatesView: React.FC<CandidatesViewProps> = ({
                 type="button"
                 onClick={onClearCandidates}
                 title="Delete all candidate records"
-                className="bg-[#fee2e2] text-[#b91c1c] hover:bg-[#fecaca] px-4 py-2 rounded-xl flex items-center gap-1.5 font-semibold text-xs md:text-sm transition-all cursor-pointer"
+                className="bg-[#fee2e2] text-[#b91c1c] hover:bg-[#fecaca] px-3 py-2 rounded-xl flex items-center gap-1 font-semibold text-xs transition-all cursor-pointer"
               >
-                <span className="material-symbols-outlined text-lg">delete_sweep</span>
-                <span>Delete All</span>
+                <span className="material-symbols-outlined text-base">delete_sweep</span>
+                <span>Clear</span>
               </button>
             )}
 
             <button
               onClick={() => setActiveTab('dashboard')}
-              className="bg-[#ededf9] text-[#191b23] px-4 py-2 rounded-xl flex items-center gap-2 font-semibold text-xs md:text-sm hover:bg-[#e1e2ed] transition-all cursor-pointer"
+              className="bg-[#004ac6]/10 text-[#004ac6] px-3.5 py-2 rounded-xl flex items-center gap-1.5 font-bold text-xs md:text-sm hover:bg-[#004ac6] hover:text-white transition-all cursor-pointer"
             >
-              <span className="material-symbols-outlined text-lg">add_circle</span>
-              <span>Screen More Resumes</span>
+              <span className="material-symbols-outlined text-base">add_circle</span>
+              <span>Screen More</span>
             </button>
+          </div>
+        </div>
+
+        {/* Target JD Role Input & Switcher Card */}
+        <div className="mb-6 p-4 md:p-5 bg-white rounded-2xl border border-[#c3c6d7]/40 shadow-sm text-left">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="material-symbols-outlined text-[#004ac6] text-xl">work</span>
+                <h2 className="font-bold text-sm md:text-base text-[#191b23]">Target Job Description Role</h2>
+                <span className="text-[11px] font-bold bg-[#004ac6]/10 text-[#004ac6] px-2 py-0.5 rounded-md">
+                  Active JD
+                </span>
+              </div>
+              <p className="text-xs text-[#737686]">
+                Set the role you are hiring for. All AI evaluations, skill gap analysis, and PDF summaries dynamically calibrate to this role.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 w-full md:w-auto">
+              <input
+                type="text"
+                value={targetRoleInput}
+                onChange={(e) => setTargetRoleInput(e.target.value)}
+                placeholder="Enter Target Role Title (e.g. Senior Machine Learning Engineer)..."
+                className="flex-1 md:w-80 bg-[#faf8ff] border border-[#c3c6d7]/60 rounded-xl px-3.5 py-2 text-xs md:text-sm font-semibold text-[#191b23] focus:ring-2 focus:ring-[#004ac6]/20"
+              />
+              <button
+                type="button"
+                onClick={() => handleApplyJdRole(targetRoleInput)}
+                className="bg-[#004ac6] text-white px-4 py-2 rounded-xl font-bold text-xs md:text-sm hover:bg-[#0053db] transition-all cursor-pointer shrink-0"
+              >
+                Set Role
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Role Preset Badges */}
+          <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-[#f0f0f5]">
+            <span className="text-[11px] font-bold text-[#737686]">Quick Role Switch:</span>
+            {[
+              'Senior Product Designer',
+              'Senior Machine Learning & NLP Engineer',
+              'Cloud Infrastructure & DevOps Architect',
+              'Senior Full-Stack React & Node Engineer',
+              'Senior Cybersecurity Architect',
+            ].map((preset, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleApplyJdRole(preset)}
+                className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-all cursor-pointer border ${
+                  targetRoleInput === preset
+                    ? 'bg-[#004ac6] text-white border-[#004ac6]'
+                    : 'bg-[#faf8ff] text-[#434655] border-[#c3c6d7]/40 hover:bg-[#e1e2ed]'
+                }`}
+              >
+                🎯 {preset}
+              </button>
+            ))}
           </div>
         </div>
 

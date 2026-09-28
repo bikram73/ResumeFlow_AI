@@ -206,6 +206,8 @@ export default function App() {
           onClearCandidates={handleClearAllCandidates}
           onDeleteCandidate={handleDeleteCandidate}
           onLoadSampleData={handleLoadSampleData}
+          jobDescription={jobDescription}
+          setJobDescription={setJobDescription}
         />
       )}
 
